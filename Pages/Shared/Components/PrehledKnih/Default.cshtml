@@ -1,0 +1,29 @@
+﻿@model PrehledKnihData
+@{
+}
+
+<table class="table">
+	<thead>
+		<tr>
+			<th>Název</th>
+			<th>Rok vydání</th>
+			<th>Autor</th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var kniha in Model.Knihy ?? Enumerable.Empty<Kniha>())
+		{
+			<tr>
+				<td>
+					<a href="/kniha/@kniha.Id">
+						@kniha.Nazev
+					</a>
+				</td>
+				<td>@kniha.RokVydani</td>
+				<td>@kniha.Autor.Prijmeni @kniha.Autor.Jmeno</td>
+			</tr>
+		}
+	</tbody>
+</table>
+
+<p>Počet knih: @(Model?.Knihy?.Count ?? 0)</p>

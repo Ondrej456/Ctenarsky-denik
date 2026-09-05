@@ -1,0 +1,10 @@
+﻿@page
+@model Čtenářský_deník.Pages.M_knihyModel
+@{
+	ViewData["Title"] = "Moje knihy";
+}
+<h1>Přehled knih</h1>
+
+@await Component.InvokeAsync("PrehledKnih", new { data = new PrehledKnihData { Knihy = Model.Data } })
+
+

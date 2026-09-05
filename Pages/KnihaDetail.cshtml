@@ -1,0 +1,33 @@
+﻿@page "/kniha/{Id:int}"
+@model Čtenářský_deník.Pages.KnihaDetailModel
+@{
+	ViewData["Title"] = Model.Data?.Nazev;
+}
+@if (Model.Data == null)
+{
+	<p>Kniha nenalezena</p>
+	return;
+}
+<h1>@Model.Data.Nazev </h1>
+
+<p>
+	První vydání @(Model.Data.RokVydani)
+</p>
+
+<p>Autor: @Model.Data.Autor.Jmeno @Model.Data.Autor.Prijmeni</p>
+
+<p>Popis: @Model.Data.Popis</p>
+
+<p>
+	<a href="/edit/kniha/@Model.Data.Id" class="btn btn-outline-primary">Upravit knihu</a>
+	
+	@if (Model.Data.UserId == null)
+	{
+		<a href="/knihy" class="btn btn-outline-primary">Seznam knih</a>
+	}
+	else
+	{
+		<a href="/M_knihy" class="btn btn-outline-primary">Seznam knih</a>
+	}
+	<a href="/autor/@Model.Data.AutorId" class="btn btn-outline-primary">Detail autora</a>
+</p>

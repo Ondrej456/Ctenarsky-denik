@@ -1,0 +1,28 @@
+﻿@page "/autor/{Id:int}"
+@model Čtenářský_deník.Pages.AutorDetailModel
+@{
+	ViewData["Title"] = Model.Data?.Prijmeni;
+}
+@if (Model.Data == null)
+{
+	<p>Autor nenalezen</p>
+	return;
+}
+<h1>@Model.Data.Jmeno @Model.Data.Prijmeni</h1>
+
+<p>Narozen(a) @(Model.Data.RokNarozeni +
+	 (Model.Data.RokUmrti == null ? "" : ", zemřel(a) " + Model.Data.RokUmrti))</p>
+
+<p>@Model.Data.Bio</p>
+
+
+@await Component.InvokeAsync("PrehledKnih", new { data = new PrehledKnihData { Knihy = Model.Data.Knihy } })
+<p>
+	<a href="/edit/kniha/0" ) class="btn btn-primary">Přidat knihu</a>
+</p>
+<p>
+	<a href="/edit/autor/@Model.Data.Id" class="btn btn-outline-primary">Upravit autora</a>
+	<a href="/Autori" class="btn btn-outline-primary">Seznam autorů</a>
+	<a href="/knihy" class="btn btn-outline-primary">Seznam knih</a>
+
+</p>

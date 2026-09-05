@@ -1,0 +1,47 @@
+﻿@page
+@model Čtenářský_deník.Pages.M_AutoriModel
+@{
+	
+	ViewData["Title"] = "Moji autoři";
+}
+<h1>Přehled autorů</h1>
+
+<table class="table">
+	<thead>
+		<tr>
+			<th>Příjmení</th>
+			<th>Jméno</th>
+			<th>Rok nar.🚼</th>
+			<th>Rok úmrtí ✝️</th>
+			<th>Bio (začátek)</th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var autor in Model.Data)
+		{
+			<tr>
+				<td>
+					<a href="/autor/@autor.Id">
+						@autor.Prijmeni
+					</a>
+				</td>
+				<td>@autor.Jmeno</td>
+				<td>@autor.RokNarozeni</td>
+				<td>@autor.RokUmrti</td>
+				<td>
+					@((autor.Bio?.Length ?? 0) > 40
+									? autor.Bio?.Substring(0, 40)
+									: autor.Bio)...
+			</td>
+		</tr>
+				}
+	</tbody>
+</table>
+
+<p>Počet autorů: @(Model?.Data?.Count ?? 0)</p>
+<p>
+	<a href="/edit/autor/0" ) class="btn btn-primary">Přidat autora</a>
+
+
+</p>
+

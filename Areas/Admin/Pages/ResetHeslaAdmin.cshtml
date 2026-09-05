@@ -1,0 +1,54 @@
+﻿@page
+@model Čtenářský_deník.Areas.Admin.Pages.ResetHeslaAdminModel
+@{
+    ViewData["Title"] = "Reset hesla uživatele";
+}
+
+
+<div style="display:flex; justify-content:center; align-items:flex-start; margin-top:60px;">
+    <div style="width:100%; max-width:400px;">
+
+        <h2 style="text-align:center; margin-bottom:25px;">Reset hesla uživatele</h2>
+
+        <form method="post" style="display:flex; flex-direction:column; gap:20px;">
+            @Html.AntiForgeryToken()
+            <div>
+                <label style="display:block; margin-bottom:5px;">Nick uživatele</label>
+                <input asp-for="Nick" name="Nick" class="form-control" style="width:100%; padding:8px;" />
+                <span asp-validation-for="Nick" class="text-danger"></span>
+            </div>
+
+            <div>
+                <label style="display:block; margin-bottom:5px;">Nové heslo</label>
+                <input asp-for="NewPassword" name="NewPassword" class="form-control" style="width:100%; padding:8px;" />
+                <span asp-validation-for="NewPassword" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary" 
+                    style="width:100%; padding:10px; font-size:16px;">
+                Resetovat heslo
+            </button>
+
+        </form>
+
+        @if (Model.ErrorMessage != null)
+        {
+            <div style="margin-top:20px; padding:10px; background:#fdd; border-radius:5px;">
+                @Model.ErrorMessage
+            </div>
+        }
+
+        @if (Model.SuccessMessage != null)
+        {
+            <div style="margin-top:20px; padding:10px; background:#dfd; border-radius:5px;">
+                @Model.SuccessMessage
+            </div>
+        }
+    </div>
+</div>
+
+
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

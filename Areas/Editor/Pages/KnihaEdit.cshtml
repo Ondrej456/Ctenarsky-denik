@@ -1,0 +1,54 @@
+﻿@page "/edit/kniha/{IdKnihy:int}"
+@model Čtenářský_deník.Areas.Editor.Pages.KnihaEditModel
+@{
+	ViewData["Title"] = "Editace knihy";
+}
+
+@if (Model.Data == null)
+{
+	<p>Kniha nenalezena</p>
+	return;
+}
+
+<h1>@(Model.IdKnihy == 0 ? "Nová kniha" : "Editace knihy")</h1>
+<form method="post">
+	<input type="hidden" asp-for="Data.Id" />
+	<div class="form-floating mb-3">
+		<input asp-for="Data.Nazev" type="text" class="form-control" placeholder="." />
+		<label asp-for="Data.Nazev"></label>
+	</div>
+	<div class="form-floating mb-3">
+		<input asp-for="Data.RokVydani" type="number" class="form-control" placeholder="." />
+		<label asp-for="Data.RokVydani"></label>
+	</div>
+	<div class="mb-3">
+		<label for="Data_AutorId" class="form-label">Autor</label>
+		<select asp-for="Data.AutorId" class="form-select" disabled>
+			@foreach (var autor in Model.Autori)
+			{
+				<option value="@autor.Id">@autor.Prijmeni @autor.Jmeno</option>
+			}
+		</select>
+		<input type="hidden" asp-for="Data.AutorId" />
+    
+	</div>
+
+	<div class="form-floating mb-3">
+		<textarea asp-for="Data.Popis" style="height: 10rem" class="form-control" placeholder="."></textarea>
+		<label for="Data_Popis">Popis knihy</label>
+	</div>
+
+	<p>
+		<button type="submit" class="btn btn-primary">Uložit</button>
+		<a href="@(Model.IdKnihy == 0 ? "/knihy" : @$"/kniha/{Model.IdKnihy}")" class="btn btn-outline-primary">Zrušit</a>
+		@if (Model.IdKnihy > 0)
+		{
+			<button type="button" class="btn btn-danger"
+					onclick="if (confirm('Opravdu chcete knihu vymazat?')) {$('#formVymazat').trigger('submit')}">
+				Vymazat
+			</button>
+		}
+	</p>
+</form>
+
+

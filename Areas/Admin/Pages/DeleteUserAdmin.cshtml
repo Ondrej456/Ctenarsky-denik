@@ -1,0 +1,106 @@
+﻿@page
+@model Čtenářský_deník.Areas.Admin.Pages.DeleteUserAdminModel
+
+@if (Model.SuccessMessage != null)
+{
+    <div style="padding:10px; background:#dfd; margin-bottom:20px;">
+        @Model.SuccessMessage
+    </div>
+}
+
+@if (Model.ErrorMessage != null)
+{
+    <div style="padding:10px; background:#fdd; margin-bottom:20px;">
+        @Model.ErrorMessage
+    </div>
+}
+
+    <div style="display:flex; justify-content:center; align-items:center; margin-top:10px;">
+        <div style="width:100%; max-width:400px; margin:auto">
+
+        @if (Model.SelectedUser == null)
+        {
+            <h2>Přehled uživatelů</h2>
+
+            <table class="table table-striped" style="font-size:20px;margin:5px">
+                <thead>
+                    <tr>
+                        <th>Nick</th>
+                        <th>Email</th>
+                        <th>Akce</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var user in Model.Users)
+                    {
+                        <tr>
+                            <td>@user.UserName</td>
+                            <td>@user.Email</td>
+                            <td>
+                                <form method="get">
+                                    <input type="hidden" name="userId" value="@user.Id" />
+                                    <button type="submit" class="btn btn-primary">
+                                        Zobrazit data
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        </div>
+    </div>
+
+    <div style="display:flex; justify-content:center; align-items:center; margin-top:10px;">
+    <div style="width:100%; max-width:400px; margin:auto">
+        @if (Model.SelectedUser != null)
+        {
+            <h2>Data uživatele: @Model.SelectedUser.UserName</h2>
+
+            <h3>Autoři (@Model.Authors.Count)</h3>
+            <table class="table table-striped" style="font-size:20px;">
+                <thead>
+                    <tr>
+                        <th>Jméno</th>
+                        <th>Příjmení</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var a in Model.Authors)
+                    {
+                        <tr>
+                            <td>@a.Jmeno</td>
+                            <td>@a.Prijmeni</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            <h3>Knihy (@Model.Books.Count)</h3>
+            <table class="table table-striped" style="font-size:20px;">
+                <thead>
+                    <tr>
+                        <th>Název</th>
+                        <th>Autor</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var k in Model.Books)
+                    {
+                        <tr>
+                            <td>@k.Nazev</td>
+                            <td style="padding:5px">@k.Autor?.Prijmeni    @k.Autor?.Jmeno</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <form method="get" asp-page="DeleteUserAdmin">
+                <button style="font-size:20px" type="submit" class="btn btn-primary">
+                    Zpět
+                </button>
+            </form>
+        }
+           
+    </div>
+    </div>
