@@ -1,6 +1,7 @@
 using Čtenářský_deník.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -83,6 +84,12 @@ app.UseAuthorization();
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapRazorPages();
+});
+
+Process.Start(new ProcessStartInfo
+{
+    FileName = "http://localhost:5000",
+    UseShellExecute = true
 });
 
 app.Run();
