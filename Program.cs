@@ -53,6 +53,12 @@ async Task AssignAdminToUserAsync(IApplicationBuilder app)
 
 var app = builder.Build();
 
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    db.Database.Migrate();   // vytvoří databázi + tabulky, pokud neexistují
+}
+
 await CreateAdminRoleAsync(app);
 await AssignAdminToUserAsync(app);
 
