@@ -30,7 +30,7 @@ C#
 📦 Instalace a spuštění
 1️⃣ Naklonování repozitáře
 Kód
-git clone https://github.com/Ondrej456/CtenarskyDenik.git
+git clone https://github.com/Ondrej456/Ctenarsky-denik.git
 2️⃣ Migrace databáze
 Ve Visual Studiu otevři Package Manager Console a spusť:
 
