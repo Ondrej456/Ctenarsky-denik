@@ -18,5 +18,25 @@ html {
 }
 
 body {
-  margin-bottom: 60px;
+    padding-bottom: 60px;
 }
+.footer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 20px;
+    position: relative;
+    text-align: center;
+    width: 100%;
+    margin-top: 20px;
+}
+#obalka {
+    width: 10%;
+}
+
+#obalka {
+    transition: transform 1s ease;
+}
+#obalka:hover {
+        transform: scale(1.5);
+    }
