@@ -7,7 +7,7 @@
 
 @foreach (var obdobi in Model.Obdobi)
 {
-    <h2 style="text-align:center;background-color:darkgray">@obdobi.Nazev</h2>
+    <h2 class="maturitniCetba">@obdobi.Nazev</h2>
 
     @if (Model.KnihyPodleObdobi.ContainsKey(obdobi.Id))
     {

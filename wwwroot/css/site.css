@@ -15,10 +15,16 @@ html {
 html {
   position: relative;
   min-height: 100%;
+  background-color:lavenderblush;
 }
 
 body {
-    padding-bottom: 60px;
+    max-width: 95vw;
+    margin: 0 auto;
+}
+main{
+    min-height: 60vh;
+    padding: 10px;
 }
 .footer {
     display: flex;
@@ -40,3 +46,16 @@ body {
 #obalka:hover {
         transform: scale(1.5);
     }
+#navigace li{
+    font-weight:bolder;
+    border: 5px solid black;
+    margin-right:5px;
+}
+#navigace li:hover{
+    background-color:burlywood;
+}
+
+.maturitniCetba {
+    text-align: center;
+    background-color:peachpuff;
+}
