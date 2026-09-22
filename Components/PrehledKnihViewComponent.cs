@@ -11,6 +11,8 @@ public class PrehledKnihViewComponent : ViewComponent
 }
 public class PrehledKnihData
 {
-    public ICollection<Kniha> Knihy { get; set; }
+    public ICollection<Kniha> Knihy { get; set; } // pro Moje knihy
+    public Dictionary<int, List<Kniha>> KnihyPodleObdobi { get; set; } // pro Maturitní četbu
+    public List<ObdobiMaturita> Obdobi { get; set; } // názvy období
 }
 

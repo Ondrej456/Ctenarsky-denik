@@ -32,7 +32,12 @@
 		<input type="hidden" asp-for="Data.AutorId" />
     
 	</div>
-
+	<div class="mb-3">
+		<label for="Data.ObdobiMaturitaId" class="form-label">Maturitní četba</label>
+		<select asp-for="Data.ObdobiMaturitaId" class="form-select" asp-items="Model.ObdobiSeznam">
+			<option value="">Není maturitní četba</option>
+		</select>
+	</div>
 	<div class="form-floating mb-3">
 		<textarea asp-for="Data.Popis" style="height: 10rem" class="form-control" placeholder="."></textarea>
 		<label for="Data_Popis">Popis knihy</label>

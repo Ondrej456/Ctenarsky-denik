@@ -20,6 +20,8 @@ namespace Čtenářský_deník.Data
 
         public Autor Autor { get; set; }
 
+        public int? ObdobiMaturitaId { get; set; }   // ← nepovinné
+        public ObdobiMaturita? Obdobi { get; set; }  // ← nepovinné
 
     }
 }

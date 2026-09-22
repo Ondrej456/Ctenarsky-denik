@@ -13,5 +13,7 @@ namespace Čtenářský_deník.Data
         public DbSet<Autor> Autori => Set<Autor>();
         public DbSet<Kniha> Knihy => Set<Kniha>();
 
+        public DbSet<ObdobiMaturita> ObdobiMaturita { get; set; }
+
     }
 }

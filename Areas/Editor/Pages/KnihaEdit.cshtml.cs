@@ -1,6 +1,7 @@
 using Čtenářský_deník.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
@@ -29,6 +30,8 @@ namespace Čtenářský_deník.Areas.Editor.Pages
         }
 
         // Načtení stránky (GET)
+
+        public SelectList ObdobiSeznam { get; set; }
         public async Task OnGetAsync()
         {
             
@@ -70,8 +73,10 @@ namespace Čtenářský_deník.Areas.Editor.Pages
                     .AsNoTracking()
                     .FirstOrDefaultAsync(x => x.Id == IdKnihy);
             }
-            
-            
+            ObdobiSeznam = new SelectList(
+                await DB.ObdobiMaturita.ToListAsync(),
+                "Id",
+                "Nazev");
         }
         // Odeslání formuláře (POST)
         public async Task<IActionResult> OnPostAsync()

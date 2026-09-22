@@ -1,29 +1,54 @@
 ﻿@model PrehledKnihData
 @{
 }
+	@if (Model.KnihyPodleObdobi != null)
+	{
+			<!-- Maturitní četba -->
+			@foreach (var obdobi in Model.Obdobi)
+			{
+				<h2>@obdobi.Nazev</h2>
 
-<table class="table">
-	<thead>
-		<tr>
-			<th>Název</th>
-			<th>Rok vydání</th>
-			<th>Autor</th>
-		</tr>
-	</thead>
-	<tbody>
-		@foreach (var kniha in Model.Knihy ?? Enumerable.Empty<Kniha>())
-		{
+				if (Model.KnihyPodleObdobi.ContainsKey(obdobi.Id))
+				{
+					<ul>
+						@foreach (var kniha in Model.KnihyPodleObdobi[obdobi.Id])
+						{
+							<li>
+								<strong>@kniha.Nazev</strong> – @kniha.Autor.Jmeno @kniha.Autor.Prijmeni
+							</li>
+						}
+					</ul>
+				}
+				else
+				{
+					<p>Žádné knihy v tomto období.</p>
+				}
+			}
+	}
+	else{
+	<table class="table">
+		<thead>
 			<tr>
-				<td>
-					<a href="/kniha/@kniha.Id">
-						@kniha.Nazev
-					</a>
-				</td>
-				<td>@kniha.RokVydani</td>
-				<td>@kniha.Autor.Prijmeni @kniha.Autor.Jmeno</td>
+				<th>Název</th>
+				<th>Rok vydání</th>
+				<th>Autor</th>
 			</tr>
-		}
-	</tbody>
-</table>
+		</thead>
+		<tbody>
+			@foreach (var kniha in Model.Knihy ?? Enumerable.Empty<Kniha>())
+			{
+				<tr>
+					<td>
+						<a href="/kniha/@kniha.Id">
+							@kniha.Nazev
+						</a>
+					</td>
+					<td>@kniha.RokVydani</td>
+					<td>@kniha.Autor.Prijmeni @kniha.Autor.Jmeno</td>
+				</tr>
+			}
+		</tbody>
+	</table>
 
-<p>Počet knih: @(Model?.Knihy?.Count ?? 0)</p>
+	<p>Počet knih: @(Model?.Knihy?.Count ?? 0)</p>
+	}
