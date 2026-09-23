@@ -23,5 +23,7 @@ namespace Čtenářský_deník.Data
         public int? ObdobiMaturitaId { get; set; }   // ← nepovinné
         public ObdobiMaturita? Obdobi { get; set; }  // ← nepovinné
 
+        public List<KnihaImage> Images { get; set; } = new();
+
     }
 }

@@ -25,6 +25,6 @@ namespace Čtenářský_deník.Data
 
         public ICollection<Kniha> Knihy {  get; set; }
 
-
+        public string ImagePath { get; set; }   // pro cestu na fotku
     }
 }

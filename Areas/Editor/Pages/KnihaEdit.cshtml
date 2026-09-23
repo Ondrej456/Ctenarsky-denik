@@ -11,7 +11,7 @@
 }
 
 <h1>@(Model.IdKnihy == 0 ? "Nová kniha" : "Editace knihy")</h1>
-<form method="post">
+<form method="post" enctype="multipart/form-data">
 	<input type="hidden" asp-for="Data.Id" />
 	<div class="form-floating mb-3">
 		<input asp-for="Data.Nazev" type="text" class="form-control" placeholder="." />
@@ -42,7 +42,10 @@
 		<textarea asp-for="Data.Popis" style="height: 10rem" class="form-control" placeholder="."></textarea>
 		<label for="Data_Popis">Popis knihy</label>
 	</div>
-
+	<div class="mb-3">
+		<label for="images" class="form-label">Přidat obrázky</label>
+		<input type="file" id="Images" name="Images" multiple class="form-control" />
+	</div>
 	<p>
 		<button type="submit" class="btn btn-primary">Uložit</button>
 		<a href="@(Model.IdKnihy == 0 ? "/knihy" : @$"/kniha/{Model.IdKnihy}")" class="btn btn-outline-primary">Zrušit</a>

@@ -19,12 +19,15 @@ namespace Čtenářský_deník.Pages
         }
         public async Task OnGetAsync()
         {
+            if (Data == null)
+            {
 
-
-            Data = await DB.Knihy
-             .AsNoTracking()
-             .Include(x => x.Autor)
-             .FirstOrDefaultAsync(x => x.Id == Id); 
+                Data = await DB.Knihy
+                 .AsNoTracking()
+                 .Include(x => x.Autor)     // načtení autorů
+                 .Include(x => x.Images)   // načtení cest k obrázkům
+                 .FirstOrDefaultAsync(x => x.Id == Id);
+            }
         }
     }
 }

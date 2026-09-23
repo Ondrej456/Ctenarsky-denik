@@ -13,6 +13,9 @@ public class AutorEditModel : PageModel
     [BindProperty]
     public Autor Data { get; set; }
 
+    [BindProperty]
+    public IFormFile Image { get; set; } // načtení obrázku
+
     readonly ApplicationDbContext DB;
 
     public AutorEditModel(ApplicationDbContext db)
@@ -36,6 +39,24 @@ public class AutorEditModel : PageModel
         if (!ModelState.IsValid)
         {
             return Page();
+        }
+
+        if (Image != null && Image.Length > 0)
+        {
+            var fileName = $"{Guid.NewGuid()}{Path.GetExtension(Image.FileName)}";
+
+            var filePath = Path.Combine(
+                Directory.GetCurrentDirectory(),
+                "wwwroot/uploads/autor",
+                fileName
+            );
+
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await Image.CopyToAsync(stream);
+            }
+
+            Data.ImagePath = $"/uploads/autor/{fileName}";
         }
 
         if (IdAutora != Data?.Id) { return BadRequest(); }

@@ -29,6 +29,9 @@ namespace Čtenářský_deník.Areas.Editor.Pages
             DB = db;
         }
 
+        [BindProperty]
+        public List<IFormFile> Images { get; set; }
+
         // Načtení stránky (GET)
 
         public SelectList ObdobiSeznam { get; set; }
@@ -77,10 +80,42 @@ namespace Čtenářský_deník.Areas.Editor.Pages
                 await DB.ObdobiMaturita.ToListAsync(),
                 "Id",
                 "Nazev");
+
+            if (Images != null && Images.Count > 0)
+            {
+                foreach (var file in Images)
+                {
+                    if (file.Length > 0)
+                    {
+                        var fileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
+                        var filePath = Path.Combine(
+                            Directory.GetCurrentDirectory(),
+                                "wwwroot/uploads/knihy",
+                                fileName);
+
+                        using (var stream = new FileStream(filePath, FileMode.Create))
+                        {
+                            await file.CopyToAsync(stream);
+                        }
+
+                        var img = new KnihaImage
+                        {
+                            BookId = Data.Id,
+                            ImagePath = $"/uploads/knihy/{fileName}"
+                        };
+
+                        await DB.KnihaImages.AddAsync(img);
+                    }
+                }
+
+                await DB.SaveChangesAsync();
+            }
         }
+
         // Odeslání formuláře (POST)
         public async Task<IActionResult> OnPostAsync()
         {
+            Console.WriteLine("Nahrané soubory: " + Images?.Count);
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             // Pokud formulář obsahuje chyby (Required, Range, atd.)
             if (!ModelState.IsValid)
@@ -119,6 +154,36 @@ namespace Čtenářský_deník.Areas.Editor.Pages
             }
             // Uloží změny do databáze
             await DB.SaveChangesAsync();
+            // Ukládání obrázků
+            if (Images != null && Images.Count > 0)
+            {
+                foreach (var file in Images)
+                {
+                    if (file.Length > 0)
+                    {
+                        var fileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
+                        var filePath = Path.Combine(
+                            Directory.GetCurrentDirectory(),
+                                "wwwroot/uploads/knihy",
+                                fileName);
+
+                        using (var stream = new FileStream(filePath, FileMode.Create))
+                        {
+                            await file.CopyToAsync(stream);
+                        }
+
+                        var img = new KnihaImage
+                        {
+                            BookId = Data.Id,
+                            ImagePath = $"/uploads/knihy/{fileName}"
+                        };
+
+                        await DB.KnihaImages.AddAsync(img);
+                    }
+                }
+
+                await DB.SaveChangesAsync();
+            }
 
             // Přesměrování na detail autora (nebo kam chceš)
             return Redirect($"/autor/{Data.AutorId}");

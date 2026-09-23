@@ -11,7 +11,7 @@
 }
 
 <h1>@(Model.IdAutora == 0 ? "Nový autor" : "Editace autora")</h1>
-<form method="post">
+<form method="post" enctype="multipart/form-data">
 	<input type="hidden" asp-for="Data.Id" />
 	<div class="form-floating mb-3">
 		<input asp-for="Data.Jmeno" type="text" class="form-control" placeholder="." />
@@ -29,6 +29,28 @@
 		<input asp-for="Data.RokUmrti" type="number" class="form-control" placeholder="." />
 		<label asp-for="Data.RokUmrti"></label>
 	</div>
+
+	@if (!string.IsNullOrEmpty(Model.Data.ImagePath))
+	{
+		<div class="mb-3">
+			<img src="@Model.Data.ImagePath"
+				 alt="Foto autora"
+				 class="img-fluid rounded border"
+				 style="max-width: 200px;" />
+		</div>
+		<div class="mb-3">
+			<label for="Image" class="form-label">Změnit obrázek</label>
+			<input type="file" id="Image" name="Image" multiple class="form-control" />
+		</div>
+	}
+	else
+	{
+		<div class="mb-3">
+			<label for="Image" class="form-label">Přidat obrázek</label>
+			<input type="file" id="Image" name="Image" multiple class="form-control" />
+		</div>
+	}
+
 	<div class="form-floating mb-3">
 		<textarea asp-for="Data.Bio" style="height: 10rem" class="form-control" placeholder="."></textarea>
 		<label asp-for="Data.Bio"></label>

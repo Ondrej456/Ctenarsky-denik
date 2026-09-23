@@ -10,11 +10,55 @@
 }
 <h1>@Model.Data.Nazev </h1>
 
+@if (Model.Data.Images != null && Model.Data.Images.Count > 0)
+{
+	<div id="carouselKniha" class="carousel slide" data-bs-ride="carousel">
+
+		<div class="carousel-indicators">
+            @for (int i = 0; i < Model.Data.Images.Count; i++)
+            {
+                <button type="button"
+                        data-bs-target="#carouselKniha"
+                        data-bs-slide-to="@i"
+                        class="@(i == 0 ? "active" : "")"
+                        aria-current="@(i == 0 ? "true" : "false")"
+                        aria-label="Slide @(i + 1)">
+                </button>
+            }
+        </div>
+
+        <div class="carousel-inner">
+            @for (int i = 0; i < Model.Data.Images.Count; i++)
+            {
+                <div class="carousel-item @(i == 0 ? "active" : "")">
+                    <img src="@Model.Data.Images[i].ImagePath"
+                         class="d-block w-100"
+                         alt="Obrázek knihy">
+                </div>
+            }
+        </div>
+
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselKniha" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Předchozí</span>
+        </button>
+
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselKniha" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Další</span>
+        </button>
+    </div>
+}
+else
+{
+	<p>Žádné obrázky nejsou nahrané.</p>
+}
+
 <p>
 	První vydání @(Model.Data.RokVydani)
 </p>
 
-<p>Autor: @Model.Data.Autor.Jmeno @Model.Data.Autor.Prijmeni</p>
+<p>Autor:  @Model.Data.Autor.Jmeno <a href="/autor/@Model.Data.Autor.Id">@Model.Data.Autor.Prijmeni</a> </p>
 
 <p style="white-space: pre-line; font-weight:bolder">Popis: @Model.Data.Popis</p>
 

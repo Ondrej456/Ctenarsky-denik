@@ -59,3 +59,11 @@ main{
     text-align: center;
     background-color:peachpuff;
 }
+
+/* Kniha detail – carousel */
+.carousel-item img {
+    max-height: 60vh; /* výška karuselu */
+    width: auto; /* nedeformuje obrázek */
+    margin: 0 auto; /* zarovnání doprostøed */
+    object-fit: contain; /* obrázek bude celý */
+}
