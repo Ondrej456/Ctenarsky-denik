@@ -14,12 +14,20 @@ namespace Čtenářský_deník.Areas.Editor.Pages
  
         public int IdKnihy { get; set; }
 
+        // načte Id autora
+        [BindProperty(SupportsGet = true)]
+        public int AutorId { get; set; }
+
+        // načte chybu - pokud je
+        [BindProperty(SupportsGet = true)]
+        public string Chyba { get; set; }
+
         // Data knihy z formuláře (POST)
         [BindProperty]
         public Kniha Data { get; set; }
 
         // Seznam autorů pro <select> v Razor stránce
-        public List<Autor> Autori { get; set; }
+        public Autor Autor { get; set; }
 
         // Přístup k databázi
         readonly ApplicationDbContext DB;
@@ -37,98 +45,68 @@ namespace Čtenářský_deník.Areas.Editor.Pages
         public SelectList ObdobiSeznam { get; set; }
         public async Task OnGetAsync()
         {
-            
-            
-                if (IdKnihy == 0)
-                {
-                    Data = new Kniha();
+            if (IdKnihy == 0)
+            {
+                Data = new Kniha();
 
-                    // pokud existují nějací autoři, nastav prvního
-                    var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-                    Autori = await DB.Autori
-                        .Where(x => x.UserId == userId)
-                        .OrderBy(x => x.Prijmeni)
-                        .ThenBy(x => x.Jmeno)
-                        .AsNoTracking()
-                        .ToListAsync();
-
+                // pokud existují nějací autoři, nastav prvního
                 
-                    if (Autori.Count > 0)
-                    {
-                        Data.AutorId = Autori[0].Id;
-                    }
+                     if (AutorId > 0)
+                {
+                    Data.AutorId = AutorId;
+
+                    Autor = await DB.Autori
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(x => x.Id == AutorId);
                 }
-            
+               
+            }
             else
             {
                 var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-                Autori = await DB.Autori
-                    .Where(x => x.UserId == userId)
-                    .OrderBy(x => x.Prijmeni)
-                    .ThenBy(x => x.Jmeno)
-                    .AsNoTracking()
-                    .ToListAsync();
 
                 // Pokud je ID > 0 → načítáme knihu z databáze
                 Data = await DB.Knihy
+                    .Include(x => x.Autor)
                     .AsNoTracking()
                     .FirstOrDefaultAsync(x => x.Id == IdKnihy);
+                Autor = Data.Autor;
             }
-            ObdobiSeznam = new SelectList(
-                await DB.ObdobiMaturita.ToListAsync(),
-                "Id",
-                "Nazev");
+                ObdobiSeznam = new SelectList(
+                     await DB.ObdobiMaturita.ToListAsync(),
+                    "Id",
+                    "Nazev");
 
-            if (Images != null && Images.Count > 0)
+
+            if (TempData["FormData"] is string formDataJson)
             {
-                foreach (var file in Images)
-                {
-                    if (file.Length > 0)
-                    {
-                        var fileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
-                        var filePath = Path.Combine(
-                            Directory.GetCurrentDirectory(),
-                                "wwwroot/uploads/knihy",
-                                fileName);
-
-                        using (var stream = new FileStream(filePath, FileMode.Create))
-                        {
-                            await file.CopyToAsync(stream);
-                        }
-
-                        var img = new KnihaImage
-                        {
-                            BookId = Data.Id,
-                            ImagePath = $"/uploads/knihy/{fileName}"
-                        };
-
-                        await DB.KnihaImages.AddAsync(img);
-                    }
-                }
-
-                await DB.SaveChangesAsync();
+                Data = System.Text.Json.JsonSerializer.Deserialize<Kniha>(formDataJson);
             }
+
+            await DB.SaveChangesAsync();
+            
         }
 
         // Odeslání formuláře (POST)
         public async Task<IActionResult> OnPostAsync()
         {
-            Console.WriteLine("Nahrané soubory: " + Images?.Count);
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             // Pokud formulář obsahuje chyby (Required, Range, atd.)
+            ModelState.Remove("Data.UserId"); ModelState.Remove("Data.Autor");
             if (!ModelState.IsValid)
             {
+                 
                 // Pokud formulář obsahuje chyby (Required, Range, atd.)
-                Autori = await DB.Autori
-                  .Where(x => x.UserId == userId)
-                  .OrderBy(x => x.Prijmeni)
-                  .ThenBy(x => x.Jmeno)
-                  .AsNoTracking()
-                  .ToListAsync();
+                Autor = await DB.Autori
+                        .AsNoTracking()
+                        .FirstOrDefaultAsync(x => x.UserId == userId); ;
 
-                return Page(); // Vrátí zpět formulář s chybami
+                TempData["FormData"] = System.Text.Json.JsonSerializer.Serialize(Data);
+
+                string textChyby = System.Net.WebUtility.UrlEncode("Název musí být vyplněn!!!");
+
+                return Redirect($"/edit/kniha/0?autorId={Data.AutorId}&Chyba={textChyby}"); // Vrátí zpět formulář 
             }
             // Ochrana: ID v URL musí odpovídat ID knihy z formuláře
             if (IdKnihy != Data?.Id) { return BadRequest(); } // Nesprávné ID → chyba
@@ -188,29 +166,19 @@ namespace Čtenářský_deník.Areas.Editor.Pages
             // Přesměrování na detail autora (nebo kam chceš)
             return Redirect($"/autor/{Data.AutorId}");
         }
-        public async Task<IActionResult> OnPostVymazatAsync(string idKnihy)
+        // smazání knihy
+        public async Task<IActionResult> OnPostVymazatAsync()
         {
-            // 1) Ověření, že ID z URL odpovídá ID z formuláře
-            if (IdKnihy != Convert.ToInt32(idKnihy))
-            {
-                return BadRequest();   // nesedí → chyba
-            }
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            // 2) Najdeme knihu podle ID
-            var kniha = await DB.Knihy
-                .FirstOrDefaultAsync(x => x.Id == IdKnihy && x.UserId == userId);
+            // ID si vezmeme přímo z vlastnosti modelu, nemusíme ho složitě parsovat z textu
+            var kniha = await DB.Knihy.FindAsync(IdKnihy);
 
-            if (kniha == null)
+            if (kniha != null)
             {
-                return NotFound();     // kniha neexistuje
+                DB.Knihy.Remove(kniha);
+                await DB.SaveChangesAsync();
             }
 
-            // 3) Smažeme knihu
-
-            DB.Knihy.Remove(kniha);
-            await DB.SaveChangesAsync();
-            return Redirect($"/knihy");
-            
+            return Redirect("/knihy");
         }
     }
 }

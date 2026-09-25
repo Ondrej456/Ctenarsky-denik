@@ -32,7 +32,7 @@ else
 
 @await Component.InvokeAsync("PrehledKnih", new { data = new PrehledKnihData { Knihy = Model.Data.Knihy } })
 <p>
-	<a href="/edit/kniha/0" ) class="btn btn-primary">Přidat knihu</a>
+	<a href="/edit/kniha/0?autorId=@Model.Data.Id") class="btn btn-primary">Přidat knihu</a> <!-- ?autorId - Id pro daného autora-->
 </p>
 <p>
 	<a href="/edit/autor/@Model.Data.Id" class="btn btn-outline-primary">Upravit autora</a>

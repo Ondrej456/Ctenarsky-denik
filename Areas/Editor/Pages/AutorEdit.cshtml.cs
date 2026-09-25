@@ -10,6 +10,9 @@ public class AutorEditModel : PageModel
     [BindProperty(SupportsGet = true)]
     public int IdAutora { get; set; }
 
+    [BindProperty(SupportsGet = true)]
+    public string Chyba { get; set; }
+
     [BindProperty]
     public Autor Data { get; set; }
 
@@ -33,12 +36,19 @@ public class AutorEditModel : PageModel
         {
             Data = await DB.Autori.FindAsync(IdAutora);
         }
+        if (TempData["FormData"] is string formDataJson)
+        {
+            Data = System.Text.Json.JsonSerializer.Deserialize<Autor>(formDataJson);
+        }
     }
     public async Task<IActionResult> OnPostAsync() // uložit autora
     {
         if (!ModelState.IsValid)
         {
-            return Page();
+            string textChyby = System.Net.WebUtility.UrlEncode("Příjmení musí být vyplněno!!!");
+
+            TempData["FormData"] = System.Text.Json.JsonSerializer.Serialize(Data);
+            return Redirect($"/edit/autor/0?Chyba={textChyby}");
         }
 
         if (Image != null && Image.Length > 0)
@@ -79,18 +89,18 @@ public class AutorEditModel : PageModel
         return Redirect($"/autor/{Data.Id}");
     }
 
-    public async Task OnPostVymazatAsync(string id_S_Autora)
+    public async Task<IActionResult> OnPostVymazatAsync()
     {
-        if(IdAutora != Convert.ToInt32 (id_S_Autora))
+        // ID si vezmeme přímo z vlastnosti modelu, nemusíme ho složitě parsovat z textu
+        var autor = await DB.Autori.FindAsync(IdAutora);
+
+        if (autor != null)
         {
-            return;
-        }
-        else 
-        {
-           DB.Autori.Remove(await DB.Autori.FindAsync(IdAutora));
+            DB.Autori.Remove(autor);
             await DB.SaveChangesAsync();
-            Response.Redirect($"/autori");
         }
+
+        return Redirect("/autori");
     }
 
 

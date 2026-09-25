@@ -6,7 +6,7 @@ namespace Čtenářský_deník.Data
     {
         [Key]
         public int Id { get; set; }
-
+        [Required]
         public string UserId { get; set; }
 
         [MaxLength(60), Required]

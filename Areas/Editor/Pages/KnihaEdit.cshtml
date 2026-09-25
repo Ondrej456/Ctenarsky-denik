@@ -16,6 +16,12 @@
 	<div class="form-floating mb-3">
 		<input asp-for="Data.Nazev" type="text" class="form-control" placeholder="." />
 		<label asp-for="Data.Nazev"></label>
+		@if(Model.Chyba != null)
+		{
+			<div class="alert alert-danger">
+				@Model.Chyba
+			</div>
+		}	
 	</div>
 	<div class="form-floating mb-3">
 		<input asp-for="Data.RokVydani" type="number" class="form-control" placeholder="." />
@@ -24,10 +30,9 @@
 	<div class="mb-3">
 		<label for="Data_AutorId" class="form-label">Autor</label>
 		<select asp-for="Data.AutorId" class="form-select" disabled>
-			@foreach (var autor in Model.Autori)
-			{
-				<option value="@autor.Id">@autor.Prijmeni @autor.Jmeno</option>
-			}
+			
+				<option value="@Model.Autor.Id">@Model.Autor.Prijmeni @Model.Autor.Jmeno</option>
+			
 		</select>
 		<input type="hidden" asp-for="Data.AutorId" />
     
@@ -51,8 +56,8 @@
 		<a href="@(Model.IdKnihy == 0 ? "/knihy" : @$"/kniha/{Model.IdKnihy}")" class="btn btn-outline-primary">Zrušit</a>
 		@if (Model.IdKnihy > 0)
 		{
-			<button type="button" class="btn btn-danger"
-					onclick="if (confirm('Opravdu chcete knihu vymazat?')) {$('#formVymazat').trigger('submit')}">
+			<button type="submit" asp-page-handler="Vymazat" class="btn btn-danger"
+					onclick="return confirm('Opravdu chcete autora vymazat?');">
 				Vymazat
 			</button>
 		}
