@@ -4,7 +4,7 @@
 	ViewData["Title"] = "Editace autora";
 }
 
-@if(Model.Data == null)
+@if(Model.Autor == null)
 {
 	<p>Autor nenalezen</p>
 	return;
@@ -12,14 +12,14 @@
 
 <h1>@(Model.IdAutora == 0 ? "Nový autor" : "Editace autora")</h1>
 <form method="post" enctype="multipart/form-data">
-	<input type="hidden" asp-for="Data.Id" />
+	<input type="hidden" asp-for="Autor.Id" />
 	<div class="form-floating mb-3">
-		<input asp-for="Data.Jmeno" type="text" class="form-control" placeholder="." />
-		<label asp-for="Data.Jmeno"></label>
+		<input asp-for="Autor.Jmeno" type="text" class="form-control" placeholder="." />
+		<label asp-for="Autor.Jmeno"></label>
 	</div>
 	<div class="form-floating mb-3">
-		<input asp-for="Data.Prijmeni" type="text" class="form-control" placeholder="." />
-		<label asp-for="Data.Prijmeni"></label>
+		<input asp-for="Autor.Prijmeni" type="text" class="form-control" placeholder="." />
+		<label asp-for="Autor.Prijmeni"></label>
 	</div>
 	@if(Model.Chyba != null)
 		{
@@ -28,18 +28,18 @@
 			</div>
 		}	
 	<div class="form-floating mb-3">
-		<input asp-for="Data.RokNarozeni" type="number" class="form-control" placeholder="." />
-		<label asp-for="Data.RokNarozeni"></label>
+		<input asp-for="Autor.RokNarozeni" type="number" class="form-control" placeholder="." />
+		<label asp-for="Autor.RokNarozeni"></label>
 	</div>
 	<div class="form-floating mb-3">
-		<input asp-for="Data.RokUmrti" type="number" class="form-control" placeholder="." />
-		<label asp-for="Data.RokUmrti"></label>
+		<input asp-for="Autor.RokUmrti" type="number" class="form-control" placeholder="." />
+		<label asp-for="Autor.RokUmrti"></label>
 	</div>
 
-	@if (!string.IsNullOrEmpty(Model.Data.ImagePath))
+	@if (!string.IsNullOrEmpty(Model.Autor.ImagePath))
 	{
 		<div class="mb-3">
-			<img src="@Model.Data.ImagePath"
+			<img src="@Model.Autor.ImagePath"
 				 alt="Foto autora"
 				 class="img-fluid rounded border"
 				 style="max-width: 200px;" />
@@ -58,8 +58,8 @@
 	}
 
 	<div class="form-floating mb-3">
-		<textarea asp-for="Data.Bio" style="height: 10rem" class="form-control" placeholder="."></textarea>
-		<label asp-for="Data.Bio"></label>
+		<textarea asp-for="Autor.Bio" style="height: 10rem" class="form-control" placeholder="."></textarea>
+		<label asp-for="Autor.Bio"></label>
 	</div>
 	<p>
 	<button type="submit" class="btn btn-primary">Uložit</button>

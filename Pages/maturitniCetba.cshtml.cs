@@ -7,11 +7,12 @@ using System.Security.Claims;
 
 namespace Čtenářský_deník.Pages
 {
-    public class M_MaturitniCetbaModel : PageModel
+    public class maturitniCetbaModel : PageModel
     {
         readonly ApplicationDbContext DB;
 
-        public M_MaturitniCetbaModel(ApplicationDbContext db)
+        public List<Kniha> Knihy { get; set; } = new();
+        public maturitniCetbaModel(ApplicationDbContext db)
         {
             DB = db;
         }

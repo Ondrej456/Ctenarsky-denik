@@ -24,7 +24,7 @@ namespace Čtenářský_deník.Areas.Editor.Pages
 
         // Data knihy z formuláře (POST)
         [BindProperty]
-        public Kniha Data { get; set; }
+        public Kniha Kniha { get; set; }
 
         // Seznam autorů pro <select> v Razor stránce
         public Autor Autor { get; set; }
@@ -47,13 +47,13 @@ namespace Čtenářský_deník.Areas.Editor.Pages
         {
             if (IdKnihy == 0)
             {
-                Data = new Kniha();
+                Kniha = new Kniha();
 
                 // pokud existují nějací autoři, nastav prvního
                 
                      if (AutorId > 0)
                 {
-                    Data.AutorId = AutorId;
+                    Kniha.AutorId = AutorId;
 
                     Autor = await DB.Autori
                     .AsNoTracking()
@@ -67,11 +67,12 @@ namespace Čtenářský_deník.Areas.Editor.Pages
 
 
                 // Pokud je ID > 0 → načítáme knihu z databáze
-                Data = await DB.Knihy
+                Kniha = await DB.Knihy
                     .Include(x => x.Autor)
+                    .Include(x => x.Images)
                     .AsNoTracking()
                     .FirstOrDefaultAsync(x => x.Id == IdKnihy);
-                Autor = Data.Autor;
+                Autor = Kniha.Autor;
             }
                 ObdobiSeznam = new SelectList(
                      await DB.ObdobiMaturita.ToListAsync(),
@@ -81,7 +82,7 @@ namespace Čtenářský_deník.Areas.Editor.Pages
 
             if (TempData["FormData"] is string formDataJson)
             {
-                Data = System.Text.Json.JsonSerializer.Deserialize<Kniha>(formDataJson);
+                Kniha = System.Text.Json.JsonSerializer.Deserialize<Kniha>(formDataJson);
             }
 
             await DB.SaveChangesAsync();
@@ -93,7 +94,7 @@ namespace Čtenářský_deník.Areas.Editor.Pages
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             // Pokud formulář obsahuje chyby (Required, Range, atd.)
-            ModelState.Remove("Data.UserId"); ModelState.Remove("Data.Autor");
+            ModelState.Remove("Kniha.UserId"); ModelState.Remove("Kniha.Autor");
             if (!ModelState.IsValid)
             {
                  
@@ -102,33 +103,39 @@ namespace Čtenářský_deník.Areas.Editor.Pages
                         .AsNoTracking()
                         .FirstOrDefaultAsync(x => x.UserId == userId); ;
 
-                TempData["FormData"] = System.Text.Json.JsonSerializer.Serialize(Data);
+                TempData["FormData"] = System.Text.Json.JsonSerializer.Serialize(Kniha);
 
                 string textChyby = System.Net.WebUtility.UrlEncode("Název musí být vyplněn!!!");
 
-                return Redirect($"/edit/kniha/0?autorId={Data.AutorId}&Chyba={textChyby}"); // Vrátí zpět formulář 
+                return Redirect($"/edit/kniha/0?autorId={Kniha.AutorId}&Chyba={textChyby}"); // Vrátí zpět formulář 
             }
+
+            if (IdKnihy == 0 && Kniha != null)
+            {
+                IdKnihy = Kniha.Id;
+            }
+
             // Ochrana: ID v URL musí odpovídat ID knihy z formuláře
-            if (IdKnihy != Data?.Id) { return BadRequest(); } // Nesprávné ID → chyba
+            if (IdKnihy != Kniha?.Id) { return BadRequest(); } // Nesprávné ID → chyba
 
             // Pokud je ID 0 → vytváříme novou knihu
             if (IdKnihy == 0)
             {
                 if (userId != null)
                 {
-                    Data.UserId = userId;
+                    Kniha.UserId = userId;
                 }
 
-                await DB.Knihy.AddAsync(Data);
+                await DB.Knihy.AddAsync(Kniha);
             }
             else
             {
                 if (userId != null)
                 {
-                    Data.UserId = userId;
+                    Kniha.UserId = userId;
                 }
                 // Jinak aktualizujeme existující knihu
-                DB.Knihy.Update(Data);
+                DB.Knihy.Update(Kniha);
             }
             // Uloží změny do databáze
             await DB.SaveChangesAsync();
@@ -152,7 +159,7 @@ namespace Čtenářský_deník.Areas.Editor.Pages
 
                         var img = new KnihaImage
                         {
-                            BookId = Data.Id,
+                            BookId = Kniha.Id,
                             ImagePath = $"/uploads/knihy/{fileName}"
                         };
 
@@ -164,7 +171,7 @@ namespace Čtenářský_deník.Areas.Editor.Pages
             }
 
             // Přesměrování na detail autora (nebo kam chceš)
-            return Redirect($"/autor/{Data.AutorId}");
+            return Redirect($"/kniha/{Kniha.Id}");
         }
         // smazání knihy
         public async Task<IActionResult> OnPostVymazatAsync()
@@ -179,6 +186,31 @@ namespace Čtenářský_deník.Areas.Editor.Pages
             }
 
             return Redirect("/knihy");
+        }
+        // mazání obrázků
+        public async Task<IActionResult> OnPostSmazatObrazekAsync(int idObrazku)
+        {
+            // 1. Najdeme obrázek v databázi
+            var obrazek = await DB.KnihaImages.FindAsync(idObrazku);
+
+            if (obrazek != null)
+            {
+                // 2. Fyzické smazání souboru z disku (wwwroot)
+                // Převedeme relativní cestu (/uploads/knihy/...) na absolutní cestu na disku
+                var souborCesta = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", obrazek.ImagePath.TrimStart('/'));
+
+                if (System.IO.File.Exists(souborCesta))
+                {
+                    System.IO.File.Delete(souborCesta);
+                }
+
+                // 3. Smazání záznamu z databáze
+                DB.KnihaImages.Remove(obrazek);
+                await DB.SaveChangesAsync();
+            }
+
+            // 4. Přesměrování zpět na aktuální stránku editace knihy, aby se změna ihned projevila
+            return Redirect($"/edit/kniha/{IdKnihy}?autorId={AutorId}");
         }
     }
 }

@@ -1,24 +1,37 @@
 ﻿@page "/kniha/{Id:int}"
 @model Čtenářský_deník.Pages.KnihaDetailModel
 @{
-	ViewData["Title"] = Model.Data?.Nazev;
+	ViewData["Title"] = Model.Kniha?.Nazev;
 }
-@if (Model.Data == null)
+@if (Model.Kniha == null)
 {
 	<p>Kniha nenalezena</p>
 	return;
 }
-<h1>@Model.Data.Nazev </h1>
+<h1>@Model.Kniha.Nazev </h1>
+<p>
+    <a href="/edit/kniha/@Model.Kniha.Id" class="btn btn-outline-primary">Upravit knihu</a>
 
-@if (Model.Data.Images != null && Model.Data.Images.Count > 0)
+    @if (Model.Kniha.UserId == null)
+    {
+        <a href="/knihy" class="btn btn-outline-primary">Seznam knih</a>
+    }
+    else
+    {
+        <a href="/M_knihy" class="btn btn-outline-primary">Seznam knih</a>
+    }
+    <a href="/autor/@Model.Kniha.AutorId" class="btn btn-outline-primary">Detail autora</a>
+</p>
+
+@if (Model.Kniha.Images != null && Model.Kniha.Images.Count > 0)
 {
 	<div id="carouselKniha" class="carousel slide" data-bs-ride="carousel">
 
 		<div class="carousel-indicators">
-            @for (int i = 0; i < Model.Data.Images.Count; i++)
+            @for (int i = 0; i < Model.Kniha.Images.Count; i++)
             {
                 <button type="button"
-                        data-bs-target="#carouselKniha"
+                        Kniha-bs-target="#carouselKniha"
                         data-bs-slide-to="@i"
                         class="@(i == 0 ? "active" : "")"
                         aria-current="@(i == 0 ? "true" : "false")"
@@ -28,10 +41,10 @@
         </div>
 
         <div class="carousel-inner">
-            @for (int i = 0; i < Model.Data.Images.Count; i++)
+            @for (int i = 0; i < Model.Kniha.Images.Count; i++)
             {
                 <div class="carousel-item @(i == 0 ? "active" : "")">
-                    <img src="@Model.Data.Images[i].ImagePath"
+                    <img src="@Model.Kniha.Images[i].ImagePath"
                          class="d-block w-100"
                          alt="Obrázek knihy">
                 </div>
@@ -55,23 +68,11 @@ else
 }
 
 <p>
-	První vydání @(Model.Data.RokVydani)
+	První vydání @(Model.Kniha.RokVydani)
 </p>
 
-<p>Autor:  @Model.Data.Autor.Jmeno <a href="/autor/@Model.Data.Autor.Id">@Model.Data.Autor.Prijmeni</a> </p>
+<p>Autor:  @Model.Kniha.Autor.Jmeno <a href="/autor/@Model.Kniha.Autor.Id">@Model.Kniha.Autor.Prijmeni</a> </p>
 
-<p style="white-space: pre-line; font-weight:bolder">Popis: @Model.Data.Popis</p>
+<p style="white-space: pre-line; font-weight:bolder">Popis: @Model.Kniha.Popis</p>
 
-<p>
-	<a href="/edit/kniha/@Model.Data.Id" class="btn btn-outline-primary">Upravit knihu</a>
-	
-	@if (Model.Data.UserId == null)
-	{
-		<a href="/knihy" class="btn btn-outline-primary">Seznam knih</a>
-	}
-	else
-	{
-		<a href="/M_knihy" class="btn btn-outline-primary">Seznam knih</a>
-	}
-	<a href="/autor/@Model.Data.AutorId" class="btn btn-outline-primary">Detail autora</a>
-</p>
+

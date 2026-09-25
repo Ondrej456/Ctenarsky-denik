@@ -10,7 +10,7 @@ public class AutorDetailModel : PageModel
     [BindProperty(SupportsGet = true)] 
     public int Id { get; set; }
 
-    public Autor Data { get; set; }
+    public Autor Autor { get; set; }
 
     readonly ApplicationDbContext DB;
 
@@ -20,7 +20,7 @@ public class AutorDetailModel : PageModel
     }
     public async Task OnGet()
     {
-        Data = await DB.Autori
+        Autor = await DB.Autori
              .AsNoTracking()
              .Include(x => x.Knihy)
              .FirstOrDefaultAsync(x => x.Id == Id); 

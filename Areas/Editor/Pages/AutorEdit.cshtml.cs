@@ -7,14 +7,14 @@ namespace Čtenářský_deník.Areas.Editor.Pages;
 
 public class AutorEditModel : PageModel
 {
-    [BindProperty(SupportsGet = true)]
+    [BindProperty(SupportsGet = true)] // načíst z URL řádku za otazníkem, musí se shodovat název
     public int IdAutora { get; set; }
 
     [BindProperty(SupportsGet = true)]
     public string Chyba { get; set; }
 
     [BindProperty]
-    public Autor Data { get; set; }
+    public Autor Autor { get; set; }
 
     [BindProperty]
     public IFormFile Image { get; set; } // načtení obrázku
@@ -30,15 +30,15 @@ public class AutorEditModel : PageModel
     {
         if (IdAutora == 0)
         {
-            Data = new Autor();
+            Autor = new Autor();
         }
         else
         {
-            Data = await DB.Autori.FindAsync(IdAutora);
+            Autor = await DB.Autori.FindAsync(IdAutora);
         }
         if (TempData["FormData"] is string formDataJson)
         {
-            Data = System.Text.Json.JsonSerializer.Deserialize<Autor>(formDataJson);
+            Autor = System.Text.Json.JsonSerializer.Deserialize<Autor>(formDataJson);
         }
     }
     public async Task<IActionResult> OnPostAsync() // uložit autora
@@ -47,7 +47,7 @@ public class AutorEditModel : PageModel
         {
             string textChyby = System.Net.WebUtility.UrlEncode("Příjmení musí být vyplněno!!!");
 
-            TempData["FormData"] = System.Text.Json.JsonSerializer.Serialize(Data);
+            TempData["FormData"] = System.Text.Json.JsonSerializer.Serialize(Autor);
             return Redirect($"/edit/autor/0?Chyba={textChyby}");
         }
 
@@ -66,27 +66,27 @@ public class AutorEditModel : PageModel
                 await Image.CopyToAsync(stream);
             }
 
-            Data.ImagePath = $"/uploads/autor/{fileName}";
+            Autor.ImagePath = $"/uploads/autor/{fileName}";
         }
 
-        if (IdAutora != Data?.Id) { return BadRequest(); }
+        if (IdAutora != Autor?.Id) { return BadRequest(); }
 
         if (IdAutora == 0)
         {
-           await DB.Autori.AddAsync(Data);
+           await DB.Autori.AddAsync(Autor);
         }
         else
         {
-            DB.Autori.Update(Data);
+            DB.Autori.Update(Autor);
         }
         // 1) Získat ID přihlášeného uživatele
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
         // 2) Přiřadit ho k autorovi
-        Data.UserId = userId;
+        Autor.UserId = userId;
 
         await DB.SaveChangesAsync();
-        return Redirect($"/autor/{Data.Id}");
+        return Redirect($"/autor/{Autor.Id}");
     }
 
     public async Task<IActionResult> OnPostVymazatAsync()

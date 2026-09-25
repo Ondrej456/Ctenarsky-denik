@@ -4,26 +4,33 @@
 	@if (Model.KnihyPodleObdobi != null)
 	{
 			<!-- Maturitní četba -->
+			int x = 0;
 			@foreach (var obdobi in Model.Obdobi)
 			{
-				<h2>@obdobi.Nazev</h2>
-
+				<h2 style="background-color:peachpuff">@obdobi.Nazev</h2>
+				
 				if (Model.KnihyPodleObdobi.ContainsKey(obdobi.Id))
 				{
+					int i=0;
+					
 					<ul>
 						@foreach (var kniha in Model.KnihyPodleObdobi[obdobi.Id])
 						{
+							i++;
 							<li>
-								<strong>@kniha.Nazev</strong> – @kniha.Autor.Jmeno @kniha.Autor.Prijmeni
+						<strong><a href="/kniha/@kniha.Id">@kniha.Nazev</a></strong> – @kniha.Autor.Jmeno @kniha.Autor.Prijmeni
 							</li>
 						}
 					</ul>
+				x += i;
+				<p>Počet knih: @i</p>
 				}
 				else
 				{
 					<p>Žádné knihy v tomto období.</p>
 				}
 			}
+	<p><strong>Celkový počet knih: @(x)</strong></p>
 	}
 	else{
 	<table class="table">
@@ -50,5 +57,5 @@
 		</tbody>
 	</table>
 
-	<p>Počet knih: @(Model?.Knihy?.Count ?? 0)</p>
+	
 	}

@@ -4,7 +4,7 @@
 	ViewData["Title"] = "Editace knihy";
 }
 
-@if (Model.Data == null)
+@if (Model.Kniha == null)
 {
 	<p>Kniha nenalezena</p>
 	return;
@@ -12,10 +12,13 @@
 
 <h1>@(Model.IdKnihy == 0 ? "Nová kniha" : "Editace knihy")</h1>
 <form method="post" enctype="multipart/form-data">
-	<input type="hidden" asp-for="Data.Id" />
+	<input type="hidden" asp-for="IdKnihy" />
+	<input type="hidden" asp-for="AutorId" />
+	<input type="hidden" asp-for="Kniha.Id" />
+
 	<div class="form-floating mb-3">
-		<input asp-for="Data.Nazev" type="text" class="form-control" placeholder="." />
-		<label asp-for="Data.Nazev"></label>
+		<input asp-for="Kniha.Nazev" type="text" class="form-control" placeholder="." />
+		<label asp-for="Kniha.Nazev"></label>
 		@if(Model.Chyba != null)
 		{
 			<div class="alert alert-danger">
@@ -24,44 +27,84 @@
 		}	
 	</div>
 	<div class="form-floating mb-3">
-		<input asp-for="Data.RokVydani" type="number" class="form-control" placeholder="." />
-		<label asp-for="Data.RokVydani"></label>
+		<input asp-for="Kniha.RokVydani" type="number" class="form-control" placeholder="." />
+		<label asp-for="Kniha.RokVydani"></label>
 	</div>
 	<div class="mb-3">
 		<label for="Data_AutorId" class="form-label">Autor</label>
-		<select asp-for="Data.AutorId" class="form-select" disabled>
+		<select asp-for="Kniha.AutorId" class="form-select" disabled>
 			
 				<option value="@Model.Autor.Id">@Model.Autor.Prijmeni @Model.Autor.Jmeno</option>
 			
 		</select>
-		<input type="hidden" asp-for="Data.AutorId" />
+		<input type="hidden" asp-for="Kniha.AutorId" />
     
 	</div>
 	<div class="mb-3">
-		<label for="Data.ObdobiMaturitaId" class="form-label">Maturitní četba</label>
-		<select asp-for="Data.ObdobiMaturitaId" class="form-select" asp-items="Model.ObdobiSeznam">
+		<label for="Kniha.ObdobiMaturitaId" class="form-label">Maturitní četba</label>
+		<select asp-for="Kniha.ObdobiMaturitaId" class="form-select" asp-items="Model.ObdobiSeznam">
 			<option value="">Není maturitní četba</option>
 		</select>
 	</div>
 	<div class="form-floating mb-3">
-		<textarea asp-for="Data.Popis" style="height: 10rem" class="form-control" placeholder="."></textarea>
+		<textarea asp-for="Kniha.Popis" style="height: 10rem" class="form-control" placeholder="."></textarea>
 		<label for="Data_Popis">Popis knihy</label>
 	</div>
+	@if (Model.Kniha.Images != null)
+	{
+
+		<div class="d-flex flex-wrap gap-3 mb-3">
+				@foreach (var image in Model.Kniha.Images)
+				{
+					<div class="mb-3 text-center border rounded p-2 bg-light" style="max-width: 210px;">
+						<img src="@image.ImagePath"
+							 alt="Foto knihy"
+							 class="img-fluid rounded"
+							 style="max-width: 200px; height: 150px; object-fit: cover; margin-bottom:10px" />
+
+						<!-- 🌟 Tlačítko upraveno na type="button" - přes JavaScript na dálku odešle skrytý formulář dole -->
+					<button type="button"  class="btn btn-sm btn-outline-danger w-100"
+								onclick="if (confirm('Opravdu chcete tento obrázek smazat?')) { document.getElementById('formSmazatObrazek_' + @image.Id).submit(); }">
+							✕ Smazat
+						</button>
+					</div>
+
+				}
+		</div>
+		
+	}	
 	<div class="mb-3">
 		<label for="images" class="form-label">Přidat obrázky</label>
 		<input type="file" id="Images" name="Images" multiple class="form-control" />
 	</div>
+	
 	<p>
 		<button type="submit" class="btn btn-primary">Uložit</button>
 		<a href="@(Model.IdKnihy == 0 ? "/knihy" : @$"/kniha/{Model.IdKnihy}")" class="btn btn-outline-primary">Zrušit</a>
 		@if (Model.IdKnihy > 0)
 		{
 			<button type="submit" asp-page-handler="Vymazat" class="btn btn-danger"
-					onclick="return confirm('Opravdu chcete autora vymazat?');">
+					onclick="if (confirm('Opravdu chcete knihu vymazat?')) { document.getElementById('formVymazatKnihu').submit(); }">
 				Vymazat
 			</button>
 		}
 	</p>
 </form>
 
+@if (Model.Kniha.Images != null)
+{
+	foreach (var image in Model.Kniha.Images)
+	{
+		<form id="formSmazatObrazek_@image.Id" method="post" asp-page-handler="SmazatObrazek" style="display:none;">
+			<input type="hidden" name="idObrazku" value="@image.Id" />
+		</form>
+	}
+}
 
+<!-- 2. Formulář pro smazání celé knihy -->
+@if (Model.IdKnihy > 0)
+{
+	<form id="formVymazatKnihu" method="post" asp-page-handler="Vymazat" style="display:none;">
+		<!-- ID se předá automaticky z routy, ale formulář tu musí fyzicky být kvůli CSRF tokenu -->
+	</form>
+}

@@ -9,7 +9,7 @@ namespace Čtenářský_deník.Pages;
 public class KnihyModel : PageModel
 {
     readonly ApplicationDbContext DB;
-    public List<Kniha> Data { get; set; } = new();
+    public List<Kniha> Knihy { get; set; } = new();
 
     public KnihyModel(ApplicationDbContext db)
     {
@@ -21,8 +21,8 @@ public class KnihyModel : PageModel
 
         if (userId == null) // nepřihlášený uvidí pouze obecné autory na stránce autoři
         {
-            Data = new List<Kniha>();
-            Data = await DB.Knihy
+            Knihy = new List<Kniha>();
+            Knihy = await DB.Knihy
             .Where(x => x.UserId == null)
             .Include(x => x.Autor)
             .OrderBy(x => x.Nazev)
@@ -30,8 +30,8 @@ public class KnihyModel : PageModel
         }
         else
         {
-            Data = new List<Kniha>();
-            Data = await DB.Knihy
+            Knihy = new List<Kniha>();
+            Knihy = await DB.Knihy
                 .Where(x => x.UserId == userId)
                 .AsNoTracking()
                 .Include(x => x.Autor)

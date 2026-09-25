@@ -16,7 +16,7 @@
 		</tr>
 	</thead>
 	<tbody>
-		@foreach(var autor in Model.Data)
+		@foreach(var autor in Model.Autori)
 		{
 			<tr>
 				<td>
@@ -33,7 +33,7 @@
 	</tbody>
 </table>
 
-<p>Počet autorů: @(Model?.Data?.Count ?? 0)</p>
+<p>Počet autorů: @(Model?.Autori?.Count ?? 0)</p>
 <p>
 	<a href="/edit/autor/0") class="btn btn-primary">Přidat autora</a>
 </p>

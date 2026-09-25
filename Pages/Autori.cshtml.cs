@@ -9,7 +9,7 @@ namespace Čtenářský_deník.Pages;
 public class AutoriModel : PageModel
 {
     readonly ApplicationDbContext DB;
-    public List<Autor> Data { get; set; }
+    public List<Autor> Autori { get; set; }
 
     public AutoriModel(ApplicationDbContext db) 
     { 
@@ -21,16 +21,16 @@ public class AutoriModel : PageModel
 
         if (userId == null) // nepřihlášený uvidí pouze obecné autory na stránce autoři
         {
-            Data = new List<Autor>();   
-            Data = await DB.Autori
+            Autori = new List<Autor>();   
+            Autori = await DB.Autori
             .Where(x => x.UserId == null)
            .OrderBy(x => x.Prijmeni)
            .ToListAsync();
         }
         else // přihlášený své autory na stránce Moji autoři
         {
-            Data = new List<Autor>();
-            Data = await DB.Autori
+            Autori = new List<Autor>();
+            Autori = await DB.Autori
                .Where(x => x.UserId == userId)
                .OrderBy(x => x.Prijmeni)
                .ToListAsync();

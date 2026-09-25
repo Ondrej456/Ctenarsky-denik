@@ -9,7 +9,7 @@ namespace Čtenářský_deník.Pages
     {
         [BindProperty(SupportsGet = true)]
         public int Id { get; set; }
-        public Kniha Data { get; set; }
+        public Kniha Kniha { get; set; }
 
         readonly ApplicationDbContext DB;
 
@@ -19,7 +19,7 @@ namespace Čtenářský_deník.Pages
         }
         public async Task OnGetAsync()
         {
-                Data = await DB.Knihy
+                Kniha = await DB.Knihy
                  .AsNoTracking()
                  .Include(x => x.Autor)     // načtení autorů
                  .Include(x => x.Images)   // načtení cest k obrázkům
