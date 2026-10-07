@@ -1,6 +1,7 @@
 using Čtenářský_deník.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
@@ -11,12 +12,16 @@ public class KnihyModel : PageModel
     readonly ApplicationDbContext DB;
     public List<Kniha> Knihy { get; set; } = new();
 
+    [BindProperty(SupportsGet = true)]
+    public string? VybranePismeno { get; set; }
+
     public KnihyModel(ApplicationDbContext db)
     {
         DB = db;
     }
     public async Task OnGetAsync()
     {
+
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
         if (userId == null) // nepřihlášený uvidí pouze obecné autory na stránce autoři

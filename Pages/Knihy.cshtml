@@ -4,7 +4,10 @@
 	ViewData["Title"] = "Knihy";
 }
 <h1>Přehled knih</h1>
-
-@await Component.InvokeAsync("PrehledKnih", new { data = new PrehledKnihData { Knihy = Model.Knihy } })
+@if (!string.IsNullOrEmpty(Model.VybranePismeno))
+{
+	<p><strong>Knihy podle písmena @Model.VybranePismeno</strong></p>
+}
+@await Component.InvokeAsync("PrehledKnih", new { data = new PrehledKnihData { Knihy = Model.Knihy }, pismeno = Model.VybranePismeno })
 
 

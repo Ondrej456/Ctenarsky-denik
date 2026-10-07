@@ -11,6 +11,8 @@ public class AutoriModel : PageModel
     readonly ApplicationDbContext DB;
     public List<Autor> Autori { get; set; }
 
+    [BindProperty(SupportsGet = true)]
+    public string? VybranePismeno { get; set; }
     public AutoriModel(ApplicationDbContext db) 
     { 
         DB = db;
@@ -21,21 +23,47 @@ public class AutoriModel : PageModel
 
         if (userId == null) // nepřihlášený uvidí pouze obecné autory na stránce autoři
         {
-            Autori = new List<Autor>();   
-            Autori = await DB.Autori
-            .Where(x => x.UserId == null)
-           .OrderBy(x => x.Prijmeni)
-           .ToListAsync();
+            if (!string.IsNullOrWhiteSpace(VybranePismeno))
+            {
+                Autori = new List<Autor>();
+                Autori = await DB.Autori
+                .Where(x => x.UserId == null)
+                .Where(x => x.Prijmeni.StartsWith(VybranePismeno))
+               .OrderBy(x => x.Prijmeni)
+               .ToListAsync();
+            }
+            else
+            {
+                Autori = new List<Autor>();
+                Autori = await DB.Autori
+                .Where(x => x.UserId == null)
+               .OrderBy(x => x.Prijmeni)
+               .ToListAsync();
+            }
+            
         }
         else // přihlášený své autory na stránce Moji autoři
         {
-            Autori = new List<Autor>();
-            Autori = await DB.Autori
-               .Where(x => x.UserId == userId)
-               .OrderBy(x => x.Prijmeni)
-               .ToListAsync();
+            if (!string.IsNullOrWhiteSpace(VybranePismeno))
+            {
+                Autori = new List<Autor>();
+                Autori = await DB.Autori
+                   .Where(x => x.UserId == userId)
+                   .Where(x => x.Prijmeni.StartsWith(VybranePismeno))
+                   .OrderBy(x => x.Prijmeni)
+                   .ToListAsync();
+            }
+            else
+            {
+                Autori = new List<Autor>();
+                Autori = await DB.Autori
+                   .Where(x => x.UserId == userId)
+                   .OrderBy(x => x.Prijmeni)
+                   .ToListAsync();
+            }
         }
     }
-            
+
+
     
 }

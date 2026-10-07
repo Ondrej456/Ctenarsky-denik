@@ -4,7 +4,49 @@
 	ViewData["Title"] = "Autori";
 }
 <h1>Přehled autorů</h1>
+@if (!string.IsNullOrEmpty(Model.VybranePismeno))
+{
+	<p><strong>Autoři podle písmena @Model.VybranePismeno</strong></p>
+}
+<div class="mb-3">
+	<form method="get">
+		<label class="form-label">
+			<input type="checkbox" id="chkPismeno">ABC
+		</label>
 
+		<select id="letterSelect" name="vybranePismeno" style="display:none" ;>
+			<option value="">Vyber písmeno</option>
+			@foreach (var pismeno in PrehledKnihData.Pismena)
+			{
+				<option value="@pismeno">@pismeno</option>
+			}
+		</select>
+		<button type="submit" id="btnFilter">Všichni autoři</button>
+	</form>
+</div>
+
+<script>
+	document.addEventListener('DOMContentLoaded', function() {
+
+	const checkbox = document.getElementById('chkPismeno');
+	const select = document.getElementById('letterSelect');
+	const button = document.getElementById('btnFilter');
+
+	if (select.value !== '') {
+	checkbox.checked = true;
+	select.style.display = 'inline-block';
+	}
+
+	checkbox.addEventListener('change', function() {
+		select.style.display = this.checked ? 'inline-block' : 'none';
+		button.textContent = this.checked? 'Filtrovat' : 'Všechny knihy';
+
+	if (!this.checked) {
+	select.value = '';
+	}
+	});
+	});
+</script>
 <table class="table">
 	<thead>
 		<tr>
