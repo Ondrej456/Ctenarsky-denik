@@ -24,10 +24,14 @@ else
 	<p class="text-muted">Autor nemá nahranou fotku.</p>
 }
 
-<p>Narozen(a) @(Model.Autor.RokNarozeni +
-	 (Model.Autor.RokUmrti == null ? "" : ", zemřel(a) " + Model.Autor.RokUmrti))</p>
+<pre style="white-space:pre-line; font-weight:bolder">
 
-<p>@Model.Autor.Bio</p>
+Narozen(a) @(Model.Autor.RokNarozeni +
+	 (Model.Autor.RokUmrti == null ? "" : ", zemřel(a) " + Model.Autor.RokUmrti))
+
+@Model.Autor.Bio
+
+</pre>
 
 <div style="clear:left;">
 <br>

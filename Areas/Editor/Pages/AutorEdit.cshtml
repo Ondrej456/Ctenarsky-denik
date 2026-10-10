@@ -61,16 +61,25 @@
 		<textarea asp-for="Autor.Bio" style="height: 10rem" class="form-control" placeholder="."></textarea>
 		<label asp-for="Autor.Bio"></label>
 	</div>
+
 	<p>
-	<button type="submit" class="btn btn-primary">Uložit</button>
-	<a href="@(Model.IdAutora == 0 ? "/autori" : @$"/autor/{Model.IdAutora}")" class="btn btn-outline-primary">Zrušit</a>
+
 	@if(Model.IdAutora > 0)
 	{
-			<button type="submit" asp-page-handler="Vymazat" class="btn btn-danger"
-					onclick="return confirm('Opravdu chcete autora vymazat?');">
-				Vymazat
+		<button type="submit" class="btn btn-primary">Uložit</button>
+		<a href="@(Model.IdAutora == 0 ? "/autori" : @$"/autor/{Model.IdAutora}")" class="btn btn-outline-primary">Zrušit</a>
+		<button type="submit" asp-page-handler="Vymazat" class="btn btn-danger"
+				onclick="return confirm('Opravdu chcete autora vymazat?');">
+			Vymazat
 			</button>
-	}	
+	}
+	else
+	{
+		<button type="submit" class="btn btn-primary">Uložit</button>
+		<input type="reset" class="btn btn-outline-danger" value="Reset" />
+		<a href="@(Model.IdAutora == 0 ? "/autori" : @$"/autor/{Model.IdAutora}")" class="btn btn-outline-primary">Zrušit</a>
+	}
+
 	</p>
 </form>
 

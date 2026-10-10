@@ -8,7 +8,7 @@
 	<p>Kniha nenalezena</p>
 	return;
 }
-<h1>@Model.Kniha.Nazev </h1>
+<h1 id="start">@Model.Kniha.Nazev </h1>
 <p>
     <a href="/edit/kniha/@Model.Kniha.Id" class="btn btn-outline-primary">Upravit knihu</a>
 
@@ -67,12 +67,15 @@ else
 	<p>Žádné obrázky nejsou nahrané.</p>
 }
 
-<p>
-	První vydání @(Model.Kniha.RokVydani)
-</p>
+<pre style="white-space: pre-line; font-weight:bolder">
 
-<p>Autor:  @Model.Kniha.Autor.Jmeno <a href="/autor/@Model.Kniha.Autor.Id">@Model.Kniha.Autor.Prijmeni</a> </p>
+První vydání @(Model.Kniha.RokVydani)
 
-<p style="white-space: pre-line; font-weight:bolder">Popis: @Model.Kniha.Popis</p>
+Autor:  @Model.Kniha.Autor.Jmeno <a href="/autor/@Model.Kniha.Autor.Id">@Model.Kniha.Autor.Prijmeni</a> 
 
+Popis: @Model.Kniha.Popis
 
+</pre>
+<div style="display:flex; justify-content:center;">
+<a href="#start" class="btn btn-outline-primary" style="margin: 0 auto;">Na začátek</a>
+</div>
