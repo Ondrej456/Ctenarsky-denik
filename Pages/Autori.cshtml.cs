@@ -12,7 +12,7 @@ public class AutoriModel : PageModel
     public List<Autor> Autori { get; set; }
 
     [BindProperty(SupportsGet = true)]
-    public string? VybranePismeno { get; set; }
+    public string VybranePismeno { get; set; }
     public AutoriModel(ApplicationDbContext db) 
     { 
         DB = db;

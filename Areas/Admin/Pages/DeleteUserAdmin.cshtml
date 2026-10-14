@@ -37,18 +37,21 @@
                 <tbody>
                     @foreach (var user in Model.Users)
                     {
-                        <tr>
-                            <td>@user.UserName</td>
-                            <td>@user.Email</td>
-                            <td>
-                                <form method="get">
-                                    <input type="hidden" name="userId" value="@user.Id" />
-                                    <button type="submit" class="btn btn-primary">
-                                        Zobrazit data
-                                    </button>
-                                </form>
-                            </td>
-                        </tr>
+                        if (user.UserName != "admin")
+                        {
+                            <tr>
+                                <td>@user.UserName</td>
+                                <td>@user.Email</td>
+                                <td>
+                                    <form method="get">
+                                        <input type="hidden" name="userId" value="@user.Id" />
+                                        <button type="submit" class="btn btn-primary">
+                                            Zobrazit data
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
                     }
                 </tbody>
             </table>

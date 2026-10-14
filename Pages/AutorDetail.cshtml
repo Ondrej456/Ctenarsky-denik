@@ -44,12 +44,14 @@ else
 
 	@await Component.InvokeAsync("PrehledKnih", new { data = new PrehledKnihData { Knihy = Model.Autor.Knihy, AutorId = Model.Autor.Id, Pismeno = Model.VybranePismeno, Druh = Model.VybranyDruh }, pismeno = Model.VybranePismeno, druh = Model.VybranyDruh })
 </div>
-<p>
-	<a href="/edit/kniha/0?autorId=@Model.Autor.Id") class="btn btn-primary">Přidat knihu</a> <!-- ?autorId - Id pro daného autora-->
-</p>
-<p>
-	<a href="/edit/autor/@Model.Autor.Id" class="btn btn-outline-primary">Upravit autora</a>
-	<a href="/Autori" class="btn btn-outline-primary">Seznam autorů</a>
-	<a href="/knihy" class="btn btn-outline-primary">Seznam knih</a>
-
-</p>
+@if (User.Identity.IsAuthenticated)
+{
+	<p>
+		<a href="/edit/kniha/0?autorId=@Model.Autor.Id" ) class="btn btn-primary">Přidat knihu</a> <!-- ?autorId - Id pro daného autora-->
+	</p>
+	<p>
+		<a href="/edit/autor/@Model.Autor.Id" class="btn btn-outline-primary">Upravit autora</a>
+		<a href="/Autori" class="btn btn-outline-primary">Seznam autorů</a>
+		<a href="/knihy" class="btn btn-outline-primary">Seznam knih</a>
+	</p>
+}

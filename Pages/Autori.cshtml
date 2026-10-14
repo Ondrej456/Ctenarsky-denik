@@ -76,6 +76,10 @@
 </table>
 
 <p>Počet autorů: @(Model?.Autori?.Count ?? 0)</p>
-<p>
-	<a href="/edit/autor/0") class="btn btn-primary">Přidat autora</a>
-</p>
+@if (User.Identity.IsAuthenticated)
+{
+	<p>
+		<a href="/edit/autor/0" ) class="btn btn-primary">Přidat autora</a>
+	</p>
+}
+

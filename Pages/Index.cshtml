@@ -5,6 +5,13 @@
 }
 
 <div class="text-center">
-    <h1 class="display-4">Vítej ve čtenářském deníku @(User.Identity?.Name ?? "človíčku")</h1>
+    @if(User.Identity.Name != "admin")
+    {
+        <h1 class="display-4">Vítej ve čtenářském deníku @(User.Identity?.Name ?? "človíčku")</h1>
+        @if (User.Identity.IsAuthenticated && !Model.Autori.Any())
+        {
+            <h2>Pro přidávání knih nejdříve vytvoř autora a po té můžeš k němu přidávat knihy.</h2>
+        }
+    }
     
 </div>

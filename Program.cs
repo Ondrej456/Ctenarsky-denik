@@ -57,7 +57,9 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-    db.Database.Migrate();   // vytvoří databázi + tabulky, pokud neexistují
+    /*db.Database.Migrate(); */  // vytvoří databázi + tabulky, pokud neexistují
+    await DbInitializer.SeedAsync(db);
+
 }
 
 await CreateAdminRoleAsync(app);
