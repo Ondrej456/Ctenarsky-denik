@@ -1,8 +1,12 @@
 html {
   font-size: 14px;
 }
-
-@media (min-width: 768px) {
+@media(min-width: 575px) and (max-width: 770px) {
+    html {
+        font-size: 12px;
+    }
+}
+@media (min-width: 1200px) {
   html {
     font-size: 25px;
   }
@@ -66,4 +70,11 @@ main{
     width: auto; /* nedeformuje obrázek */
     margin: 0 auto; /* zarovnání doprostøed */
     object-fit: contain; /* obrázek bude celý */
+}
+
+#logout:hover {
+    background-color: red;
+}
+#navigace li:has(#nick):hover {
+    background-color: initial;
 }

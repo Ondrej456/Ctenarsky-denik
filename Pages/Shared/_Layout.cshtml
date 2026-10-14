@@ -13,7 +13,11 @@
     <header >
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container" style="background-color:antiquewhite">
-                <a class="navbar-brand" asp-area="" asp-page="/Index">Čtenářský deník</a>
+                <div style="display:block">
+                    <a class="navbar-brand" asp-area="" asp-page="/Index">Čtenářský deník</a>
+                    <h3 id="clock"></h3>
+
+                </div>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -26,10 +30,10 @@
                         @if (User.IsInRole("Admin"))
                         {
                             <li>
-                                <a class="nav-link" asp-area="Admin" asp-page="/ResetHeslaAdmin" target="_blank">Reset hesla</a>
+                                <a class="nav-link" asp-area="Admin" asp-page="/ResetHeslaAdmin">Reset hesla</a>
                             </li>
                             <li>
-                                <a class="nav-link" asp-area="Admin" asp-page="/DeleteUserAdmin" target="_blank">Přehled uživatelů</a>
+                                <a class="nav-link" asp-area="Admin" asp-page="/DeleteUserAdmin">Přehled uživatelů</a>
                             </li>
                         }
                         @if (!User.IsInRole("Admin"))

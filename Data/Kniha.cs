@@ -9,9 +9,14 @@ namespace Čtenářský_deník.Data
         [Required]
         public string UserId { get; set; }
 
-        [MaxLength(60), Required]
+        [MaxLength(60), Required, Display(Name ="Název")]
         public string Nazev { get; set; }
 
+        public string Druh { get; set; }
+
+        [Display (Name ="Žánr")]
+        public string Zanr { get; set; }
+        [Display(Name ="Rok Vydání")]
         public int? RokVydani { get; set; }
 
         public string Popis { get; set; } 
@@ -21,7 +26,7 @@ namespace Čtenářský_deník.Data
         public Autor Autor { get; set; }
 
         public int? ObdobiMaturitaId { get; set; }   // ← nepovinné
-        public ObdobiMaturita? Obdobi { get; set; }  // ← nepovinné
+        public ObdobiMaturita Obdobi { get; set; }  // ← nepovinné
 
         public List<KnihaImage> Images { get; set; } = new();
 

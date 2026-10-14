@@ -19,6 +19,8 @@ namespace Čtenářský_deník.Areas.Admin.Pages
 
         public List<IdentityUser> Users { get; set; }
         public IdentityUser SelectedUser { get; set; }
+        [BindProperty]
+        public string UserId { get; set; }
         public List<Autor> Authors { get; set; }
         public List<Kniha> Books { get; set; }
 
@@ -28,6 +30,7 @@ namespace Čtenářský_deník.Areas.Admin.Pages
         public async Task<IActionResult> OnGetAsync(string userId)
         {
             Users = _userManager.Users.ToList();
+            UserId = userId;
 
             if (string.IsNullOrWhiteSpace(userId))
                 return Page();
@@ -46,6 +49,15 @@ namespace Čtenářský_deník.Areas.Admin.Pages
             return Page();
         }
 
-       
+        public async Task<IActionResult> OnPostVymazatAsync()
+        {
+            var user = await _userManager.FindByIdAsync(UserId);
+
+            if (user != null) 
+            {
+                await _userManager.DeleteAsync(user);
+            }
+            return Redirect("/Admin/DeleteUserAdmin");
+        }
     }
 }

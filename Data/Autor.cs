@@ -21,7 +21,7 @@ namespace Čtenářský_deník.Data
         [Display(Name = "Rok úmrtí")]
         public int? RokUmrti {  get; set; }
         [DataType(DataType.MultilineText), Display(Name = "O autorovi")]
-        public string? Bio {  get; set; }
+        public string Bio {  get; set; }
 
         public ICollection<Kniha> Knihy {  get; set; }
 

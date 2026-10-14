@@ -24,18 +24,25 @@ else
 	<p class="text-muted">Autor nemá nahranou fotku.</p>
 }
 
-<pre style="white-space:pre-line; font-weight:bolder">
+<div style="white-space:pre-line; font-weight:bolder; font-family: Consolas, Courier New, monospace;">
+	Narozen(a) @(Model.Autor.RokNarozeni +
+		(Model.Autor.RokUmrti == null ? "" : ", zemřel(a) " + Model.Autor.RokUmrti))
 
-Narozen(a) @(Model.Autor.RokNarozeni +
-	 (Model.Autor.RokUmrti == null ? "" : ", zemřel(a) " + Model.Autor.RokUmrti))
-
-@Model.Autor.Bio
-
-</pre>
+	@Model.Autor.Bio
+</div>
 
 <div style="clear:left;">
 <br>
-@await Component.InvokeAsync("PrehledKnih", new { data = new PrehledKnihData { Knihy = Model.Autor.Knihy } })
+	@if (!string.IsNullOrEmpty(Model.VybranePismeno))
+	{
+		<p><strong>Knihy podle písmena @Model.VybranePismeno</strong></p>
+	}
+	@if (!string.IsNullOrEmpty(Model.VybranyDruh))
+	{
+		<p><strong>Knihy podle literárního druhu: @Model.VybranyDruh</strong></p>
+	}
+
+	@await Component.InvokeAsync("PrehledKnih", new { data = new PrehledKnihData { Knihy = Model.Autor.Knihy, AutorId = Model.Autor.Id, Pismeno = Model.VybranePismeno, Druh = Model.VybranyDruh }, pismeno = Model.VybranePismeno, druh = Model.VybranyDruh })
 </div>
 <p>
 	<a href="/edit/kniha/0?autorId=@Model.Autor.Id") class="btn btn-primary">Přidat knihu</a> <!-- ?autorId - Id pro daného autora-->

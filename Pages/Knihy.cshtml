@@ -4,10 +4,17 @@
 	ViewData["Title"] = "Knihy";
 }
 <h1>Přehled knih</h1>
+
 @if (!string.IsNullOrEmpty(Model.VybranePismeno))
 {
 	<p><strong>Knihy podle písmena @Model.VybranePismeno</strong></p>
 }
-@await Component.InvokeAsync("PrehledKnih", new { data = new PrehledKnihData { Knihy = Model.Knihy }, pismeno = Model.VybranePismeno })
+
+@if (!string.IsNullOrEmpty(Model.VybranyDruh))
+{
+	<p><strong>Knihy podle literárního druhu: @Model.VybranyDruh</strong></p>
+}
+
+@await Component.InvokeAsync("PrehledKnih", new { data = new PrehledKnihData { Knihy = Model.Knihy, Pismeno = Model.VybranePismeno, Druh = Model.VybranyDruh }, pismeno = Model.VybranePismeno, druh = Model.VybranyDruh })
 
 

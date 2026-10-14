@@ -12,6 +12,12 @@ public class AutorDetailModel : PageModel
 
     public Autor Autor { get; set; }
 
+    [BindProperty(SupportsGet = true)]
+    public string VybranePismeno { get; set; }
+
+    [BindProperty(SupportsGet = true)]
+    public string VybranyDruh { get; set; }
+
     readonly ApplicationDbContext DB;
 
     public AutorDetailModel(ApplicationDbContext db)

@@ -1,6 +1,10 @@
 ﻿@page
 @model Čtenářský_deník.Areas.Admin.Pages.DeleteUserAdminModel
 
+@{
+    Layout = "/Pages/Shared/_Layout.cshtml";
+}
+
 @if (Model.SuccessMessage != null)
 {
     <div style="padding:10px; background:#dfd; margin-bottom:20px;">
@@ -95,9 +99,10 @@
                     }
                 </tbody>
             </table>
-            <form method="get" asp-page="DeleteUserAdmin">
-                <button style="font-size:20px" type="submit" class="btn btn-primary">
-                    Zpět
+            <form method="post" asp-page="DeleteUserAdmin">
+                <input type="hidden" asp-for="UserId" />
+                <button class="btn btn-outline-danger" type="submit" asp-page-handler="Vymazat" onclick="return confirm('Opravdu chcete autora vymazat?')";>
+                    Vymazat
                 </button>
             </form>
         }

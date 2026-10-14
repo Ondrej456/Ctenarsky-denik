@@ -268,6 +268,9 @@ namespace Čtenářský_deník.Migrations
                     b.Property<int>("AutorId")
                         .HasColumnType("int");
 
+                    b.Property<string>("Druh")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Nazev")
                         .IsRequired()
                         .HasMaxLength(60)
@@ -283,6 +286,10 @@ namespace Čtenářský_deník.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Zanr")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");

@@ -13,8 +13,10 @@ public class KnihyModel : PageModel
     public List<Kniha> Knihy { get; set; } = new();
 
     [BindProperty(SupportsGet = true)]
-    public string? VybranePismeno { get; set; }
+    public string VybranePismeno { get; set; }
 
+    [BindProperty(SupportsGet = true)]
+    public string VybranyDruh { get; set; }
     public KnihyModel(ApplicationDbContext db)
     {
         DB = db;

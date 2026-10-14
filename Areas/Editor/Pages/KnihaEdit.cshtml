@@ -17,14 +17,39 @@
 	<input type="hidden" asp-for="Kniha.Id" />
 
 	<div class="form-floating mb-3">
+
 		<input asp-for="Kniha.Nazev" type="text" class="form-control" placeholder="." />
 		<label asp-for="Kniha.Nazev"></label>
+		
 		@if(Model.Chyba != null)
 		{
 			<div class="alert alert-danger">
 				@Model.Chyba
 			</div>
 		}	
+
+	</div>
+
+	<div class="form-floating mb-3">
+		
+		<select asp-for="Kniha.Zanr" class="form-select" >
+			<option value="">Vyber žánr</option>
+			<option value="Sonet">Sonet</option>
+			<option value="Óda">Óda</option>
+			<option value="Elegie">Elegie</option>
+			<option value="Hymnus">Hymnus</option>
+			<option value="Balada">Balada</option>
+			<option value="Epigram">Epigram</option>
+			<option value="Román">Román</option>
+			<option value="Povídka">Povídka</option>
+			<option value="Epos">Epos</option>
+			<option value="Kronika">Kronika</option>
+			<option value="Tragédie">Tragédie</option>
+			<option value="Komedie">Komedie</option>
+			<option value="Bajka">Bajka</option>
+			<option value="Melodrama">Melodrama</option>
+		</select>
+		<label asp-for="Kniha.Zanr" class="form-label"></label>
 	</div>
 	<div class="form-floating mb-3">
 		<input asp-for="Kniha.RokVydani" type="number" class="form-control" placeholder="." />

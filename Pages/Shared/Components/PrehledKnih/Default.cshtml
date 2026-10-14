@@ -31,51 +31,58 @@
 				}
 			}
 	<p><strong>Celkový počet knih: @(x)</strong></p>
+}
+else
+{
+	@if (Model.AutorId > 0 && (!string.IsNullOrWhiteSpace(Model.Pismeno) || !string.IsNullOrWhiteSpace(Model.Druh)))
+	{
+		<a href="/autor/@Model.AutorId" onclick="hideFiltryFalse()" class="btn btn-danger" id="abortFiltr" style="margin-bottom:5px;">Zruš filtr</a>
 	}
-	else{
-		<div class="mb-3">
-		<form method="get">
-		<label class="form-label">
-				<input type="checkbox" id="chkPismeno"> ABC
-			</label>
+	@if (Model.AutorId == 0 && (!string.IsNullOrWhiteSpace(Model.Pismeno) || !string.IsNullOrWhiteSpace(Model.Druh)))
+	{
+		<a href="/knihy" onclick="hideFiltryFalse()" class="btn btn-danger" id="abortFiltr">Zruš filtr</a>
+	}
+	<div style="display:flex;" id="formFiltr">
+		<div class="mb-0" >
+			<form method="get">
+			<label class="form-label">
+					<input type="checkbox" id="chkPismeno"> ABC
+				</label>
 			
-			<select id="letterSelect" name="vybranePismeno" style="display:none";>
-				<option value="">Vyber písmeno</option>
-			@foreach(var pismeno in PrehledKnihData.Pismena)
-			{
-				<option value="@pismeno">@pismeno</option>
-			}
-		</select>
-			<button type="submit" id="btnFilter">Všechny knihy</button>
-		</form>
-		</div>
+				<select id="selectPismeno" name="vybranePismeno" style="display:none";>
+					<option value="">Vyber písmeno</option>
+				@foreach(var pismeno in PrehledKnihData.Pismena)
+				{
+					<option value="@pismeno">@pismeno</option>
+				}
+			</select>
+				<button type="submit" onclick="hideFiltryTrue()" id="btnPismeno" style="display:none;"></button>
+			</form>
+			</div>
+		<div class="mb-0" style="margin-left:30px;" >
+			<form method="get">
+				<label class="form-label">
+					<input type="checkbox" id="chkDruh"> Druh
+				</label>
 
-	<script>
-		document.addEventListener('DOMContentLoaded', function() {
+				<select id="selectDruh" name="vybranyDruh" style="display:none;">
+					<option value="">Vyber literární druh</option>
+						@foreach (var druh in PrehledKnihData.Druhy)
+						{
+							<option value="@druh">@druh</option>
+						}
+				</select>
+				<button type="submit" onclick="hideFiltryTrue()" id="btnDruh" style="display:none;"></button>
+			</form>
+		</div>	
+	</div>
 
-		const checkbox = document.getElementById('chkPismeno');
-		const select = document.getElementById('letterSelect');
-		const button = document.getElementById('btnFilter');
-
-		if (select.value !== '') {
-		checkbox.checked = true;
-		select.style.display = 'inline-block';
-		}
-
-		checkbox.addEventListener('change', function() {
-		select.style.display = this.checked ? 'inline-block' : 'none';
-		button.textContent = this.checked? 'Filtrovat' : 'Všechny knihy';
-
-		if (!this.checked) {
-		select.value = '';
-		}
-		});
-		});
-	</script>
 	<table class="table">
 		<thead>
 			<tr>
 				<th>Název</th>
+				<th>Literární druh</th>
+				<th>Žánr</th>
 				<th>Rok vydání</th>
 				<th>Autor</th>
 			</tr>
@@ -89,6 +96,8 @@
 							@kniha.Nazev
 						</a>
 					</td>
+					<td>@kniha.Druh</td>
+					<td>@kniha.Zanr</td>
 					<td>@kniha.RokVydani</td>
 					<td>@kniha.Autor.Prijmeni @kniha.Autor.Jmeno</td>
 				</tr>

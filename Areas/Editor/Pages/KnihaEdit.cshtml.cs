@@ -118,6 +118,16 @@ namespace Čtenářský_deník.Areas.Editor.Pages
             // Ochrana: ID v URL musí odpovídat ID knihy z formuláře
             if (IdKnihy != Kniha?.Id) { return BadRequest(); } // Nesprávné ID → chyba
 
+            string[] zanry = {"Sonet","Óda","Elegie","Hymnus","Balada","Epigram","Román","Povídka","Epos","Kronika","Tragédie","Komedie","Bajka","Melodrama"};
+
+            if (zanry.Contains(Kniha.Zanr))
+            {
+                int index = Array.IndexOf(zanry, Kniha.Zanr);
+                if (index <= 5) { Kniha.Druh = "Poezie";}
+                if (index > 5 && index <= 9) { Kniha.Druh = "Próza";}
+                else{ Kniha.Druh = "Drama";}
+            }
+
             // Pokud je ID 0 → vytváříme novou knihu
             if (IdKnihy == 0)
             {
