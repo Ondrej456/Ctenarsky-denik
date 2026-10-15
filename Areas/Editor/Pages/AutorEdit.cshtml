@@ -68,6 +68,7 @@
 	{
 		<button type="submit" class="btn btn-primary">Uložit</button>
 		<a href="@(Model.IdAutora == 0 ? "/autori" : @$"/autor/{Model.IdAutora}")" class="btn btn-outline-primary">Zrušit</a>
+
 		<button type="submit" asp-page-handler="Vymazat" class="btn btn-danger"
 				onclick="return confirm('Opravdu chcete autora vymazat?');">
 			Vymazat

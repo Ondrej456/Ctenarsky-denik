@@ -2,6 +2,7 @@ using Čtenářský_deník.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Security.Claims;
+using Microsoft.EntityFrameworkCore;
 
 namespace Čtenářský_deník.Areas.Editor.Pages;
 
@@ -93,12 +94,43 @@ public class AutorEditModel : PageModel
     {
         // ID si vezmeme přímo z vlastnosti modelu, nemusíme ho složitě parsovat z textu
         var autor = await DB.Autori.FindAsync(IdAutora);
-
         if (autor != null)
         {
+            var bookIds = await DB.Knihy // získáme ID knihy spojené s autorem
+                    .Where(k => k.AutorId == IdAutora)
+                    .Select(k => k.Id)
+                    .ToListAsync();
+
+            var imagesKnihy = await DB.KnihaImages
+                     .Where(i => bookIds.Contains(i.BookId))
+                     .ToListAsync();
+
+
+            foreach (var image in imagesKnihy)
+            {
+                var pathKO = Path.Combine(  // pathKO cesta k obrázku knihy
+                    Directory.GetCurrentDirectory(),
+                     "wwwroot", image.ImagePath.TrimStart('/'));
+
+                if (System.IO.File.Exists(pathKO))
+                {
+                    System.IO.File.Delete(pathKO);
+                }
+            }
+
+            var souborCesta = Path.Combine(Directory.GetCurrentDirectory(), 
+                                "wwwroot", autor.ImagePath.TrimStart('/')); ;
+
+            if (System.IO.File.Exists(souborCesta))
+            {
+                System.IO.File.Delete(souborCesta);
+            }
+
             DB.Autori.Remove(autor);
             await DB.SaveChangesAsync();
         }
+
+
 
         return Redirect("/autori");
     }

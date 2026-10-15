@@ -109,7 +109,9 @@
 		@if (Model.IdKnihy > 0)
 		{
 			<button type="submit" class="btn btn-primary">Uložit</button>
+
 			<a href="@(Model.IdKnihy == 0 ? "/knihy" : @$"/kniha/{Model.IdKnihy}")" class="btn btn-outline-primary">Zrušit</a>
+
 			<button type="submit" asp-page-handler="Vymazat" class="btn btn-danger"
 					onclick="if (confirm('Opravdu chcete knihu vymazat?')) { document.getElementById('formVymazatKnihu').submit(); }">
 				Vymazat

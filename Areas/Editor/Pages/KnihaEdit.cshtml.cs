@@ -189,6 +189,28 @@ namespace Čtenářský_deník.Areas.Editor.Pages
             // ID si vezmeme přímo z vlastnosti modelu, nemusíme ho složitě parsovat z textu
             var kniha = await DB.Knihy.FindAsync(IdKnihy);
 
+            var bookIds = await DB.Knihy // získáme ID knihy spojené s autorem
+                  .Where(k => k.Id == IdKnihy)
+                  .Select(k => k.Id)
+                  .ToListAsync();
+
+            var imagesKnihy = await DB.KnihaImages
+                     .Where(i => bookIds.Contains(i.BookId))
+                     .ToListAsync();
+
+
+            foreach (var image in imagesKnihy)
+            {
+                var pathKO = Path.Combine(  // pathKO cesta k obrázku knihy
+                    Directory.GetCurrentDirectory(),
+                     "wwwroot", image.ImagePath.TrimStart('/'));
+
+                if (System.IO.File.Exists(pathKO))
+                {
+                    System.IO.File.Delete(pathKO);
+                }
+            }
+
             if (kniha != null)
             {
                 DB.Knihy.Remove(kniha);
@@ -207,7 +229,8 @@ namespace Čtenářský_deník.Areas.Editor.Pages
             {
                 // 2. Fyzické smazání souboru z disku (wwwroot)
                 // Převedeme relativní cestu (/uploads/knihy/...) na absolutní cestu na disku
-                var souborCesta = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", obrazek.ImagePath.TrimStart('/'));
+                var souborCesta = Path.Combine(Directory.GetCurrentDirectory(),
+                                    "wwwroot", obrazek.ImagePath.TrimStart('/'));
 
                 if (System.IO.File.Exists(souborCesta))
                 {

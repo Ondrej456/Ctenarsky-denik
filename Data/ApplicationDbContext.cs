@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 
@@ -19,6 +20,12 @@ namespace Čtenářský_deník.Data
                 .HasOne(i => i.Kniha)
                 .WithMany(k => k.Images)
                 .HasForeignKey(i => i.BookId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<Autor>()  // při smazání uživatele se vymažou i data s ním spojené
+                .HasOne<IdentityUser>()
+                .WithMany()
+                .HasForeignKey(a => a.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
         }
 
