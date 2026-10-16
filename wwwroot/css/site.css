@@ -78,3 +78,22 @@ main{
 #navigace li:has(#nick):hover {
     background-color: initial;
 }
+
+/* tisk knihy nebo autor*/
+@media print {
+    body * {
+        visibility: hidden;
+    }
+
+    #obsah-k-tisku,
+    #obsah-k-tisku * {
+        visibility: visible;
+    }
+
+    #obsah-k-tisku {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+    }
+}

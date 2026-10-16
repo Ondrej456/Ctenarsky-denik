@@ -66,19 +66,26 @@ else
 {
 	<p>Žádné obrázky nejsou nahrané.</p>
 }
-
-<pre style="white-space: pre-line; font-weight:bolder">
-
+<button type="button" class="btn btn-outline-primary" onclick="window.print()" style="margin-bottom:5px;">
+    🖨️ Tisk
+</button>
+<pre id="obsah-k-tisku" style="white-space: pre-line; font-weight:bolder">
 První vydání: @(Model.Kniha.RokVydani)
 
-Druh: @(Model.Kniha.Druh)
+Literární druh: @(Model.Kniha.Druh)
 
 Literární žánr: @(Model.Kniha.Zanr)
 
 Autor:  @Model.Kniha.Autor.Jmeno <a href="/autor/@Model.Kniha.Autor.Id">@Model.Kniha.Autor.Prijmeni</a> 
 
-Popis: @Model.Kniha.Popis
-
+    @if (Model.Kniha.ObdobiMaturitaId == null)
+    {
+            <a>Popis: @Model.Kniha.Popis;</a>
+    }
+    else
+    {
+            <a>@Model.Kniha.Popis; </a>
+    }
 </pre>
 <div style="display:flex; justify-content:center;">
 <a href="#start" class="btn btn-outline-primary" style="margin: 0 auto;">Na začátek</a>

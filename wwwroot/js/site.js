@@ -52,3 +52,4 @@ function hideFiltryTrue() {
 function hideFiltryFalse() {
 	sessionStorage.setItem("hideFiltr", "false");
 }
+/* Tisk knihy */

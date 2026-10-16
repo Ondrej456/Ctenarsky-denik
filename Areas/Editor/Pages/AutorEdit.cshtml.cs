@@ -8,7 +8,7 @@ namespace Čtenářský_deník.Areas.Editor.Pages;
 
 public class AutorEditModel : PageModel
 {
-    [BindProperty(SupportsGet = true)] // načíst z URL řádku za otazníkem, musí se shodovat název
+    [BindProperty(SupportsGet = true)] // načíst z URL řádku, musí se shodovat název, v HTML kódu druhý řádek 
     public int IdAutora { get; set; }
 
     [BindProperty(SupportsGet = true)]
@@ -54,6 +54,20 @@ public class AutorEditModel : PageModel
 
         if (Image != null && Image.Length > 0)
         {
+            //Při změně obrázku, vymaž starý obrázek
+            var autor = await DB.Autori
+                        .AsNoTracking()
+                        .FirstOrDefaultAsync(a => a.Id == IdAutora);
+
+            var souborCesta = Path.Combine(Directory.GetCurrentDirectory(),
+                                "wwwroot", autor.ImagePath.TrimStart('/')); ;
+
+            if (System.IO.File.Exists(souborCesta))
+            {
+                System.IO.File.Delete(souborCesta);
+            }
+
+            // uložení obrázku do /uploads/autor
             var fileName = $"{Guid.NewGuid()}{Path.GetExtension(Image.FileName)}";
 
             var filePath = Path.Combine(
@@ -66,7 +80,6 @@ public class AutorEditModel : PageModel
             {
                 await Image.CopyToAsync(stream);
             }
-
             Autor.ImagePath = $"/uploads/autor/{fileName}";
         }
 
