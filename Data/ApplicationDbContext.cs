@@ -32,7 +32,7 @@ namespace Čtenářský_deník.Data
         public DbSet<Autor> Autori => Set<Autor>(); // tabulka s autory
         public DbSet<Kniha> Knihy => Set<Kniha>(); // tabulka s knihami
 
-        public DbSet<ObdobiMaturita> ObdobiMaturita { get; set; } // tabulka s maturtinímu období
+        public DbSet<ObdobiMaturita> ObdobiMaturita { get; set; } // tabulka s maturtinímu obdobími
 
         public DbSet<KnihaImage> KnihaImages { get; set; } // tabulka pro cesty odkazující na obrázky pro knihy
 
