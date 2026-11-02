@@ -24,22 +24,28 @@ setInterval(updateClock, 1000);
 			const checkbox = document.getElementById(checkboxId);
 			const select = document.getElementById(selectId);
 			const button = document.getElementById(buttonId);
-	
-
 
 			if (select.value !== '') {
 				checkbox.checked = true;
 				select.style.display = 'inline-block';
 				button.style.display = 'inline-block';
+				button.textContent = 'Filtrovat';
 			}
+
 			checkbox.addEventListener('change', function () {
 				select.style.display = this.checked ? 'inline-block' : 'none';
-				button.textContent = 'Filtrovat';
-				button.style.display = this.checked ? 'inline-block' : 'none';
+
 				if (!this.checked) {
 					select.value = '';
+					button.style.display = 'none';
 				}
 			});
+
+			select.addEventListener('change', function () {
+				button.style.display = this.value !== '' ? 'inline-block' : 'none';
+				button.textContent = 'Filtrovat';
+			});
+			
 		}
 
 		nastavFiltr("chkPismeno", "selectPismeno", "btnPismeno");
