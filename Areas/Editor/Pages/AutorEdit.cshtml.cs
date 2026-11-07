@@ -54,7 +54,7 @@ public class AutorEditModel : PageModel
 
         if (Image != null && Image.Length > 0)
         {
-            if (IdAutora > 0)
+            if (IdAutora > 0 && Autor.ImagePath!=null)
             {
                 //Při změně obrázku, vymaž starý obrázek
                 var autor = await DB.Autori
@@ -89,17 +89,25 @@ public class AutorEditModel : PageModel
 
         if (IdAutora == 0)
         {
-           await DB.Autori.AddAsync(Autor);
+            // 1) Získat ID přihlášeného uživatele
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            // 2) Přiřadit ho k autorovi
+            Autor.UserId = userId;
+
+            await DB.Autori.AddAsync(Autor);  
         }
         else
         {
+            var autor = await DB.Autori
+                            .AsNoTracking()
+                            .FirstOrDefaultAsync(a => a.Id == IdAutora);
+            if (Image == null)
+            {
+                Autor.ImagePath = autor.ImagePath;
+            }
             DB.Autori.Update(Autor);
         }
-        // 1) Získat ID přihlášeného uživatele
-        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-        // 2) Přiřadit ho k autorovi
-        Autor.UserId = userId;
 
         await DB.SaveChangesAsync();
         return Redirect($"/autor/{Autor.Id}");
