@@ -54,19 +54,21 @@ public class AutorEditModel : PageModel
 
         if (Image != null && Image.Length > 0)
         {
-            //Při změně obrázku, vymaž starý obrázek
-            var autor = await DB.Autori
-                        .AsNoTracking()
-                        .FirstOrDefaultAsync(a => a.Id == IdAutora);
-
-            var souborCesta = Path.Combine(Directory.GetCurrentDirectory(),
-                                "wwwroot", autor.ImagePath.TrimStart('/')); ;
-
-            if (System.IO.File.Exists(souborCesta))
+            if (IdAutora > 0)
             {
-                System.IO.File.Delete(souborCesta);
-            }
+                //Při změně obrázku, vymaž starý obrázek
+                var autor = await DB.Autori
+                            .AsNoTracking()
+                            .FirstOrDefaultAsync(a => a.Id == IdAutora);
 
+                var souborCesta = Path.Combine(Directory.GetCurrentDirectory(),
+                                    "wwwroot", autor.ImagePath.TrimStart('/')); ;
+
+                if (System.IO.File.Exists(souborCesta))
+                {
+                    System.IO.File.Delete(souborCesta);
+                }
+            }
             // uložení obrázku do /uploads/autor
             var fileName = $"{Guid.NewGuid()}{Path.GetExtension(Image.FileName)}";
 
