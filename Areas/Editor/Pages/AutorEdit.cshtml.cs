@@ -44,6 +44,9 @@ public class AutorEditModel : PageModel
     }
     public async Task<IActionResult> OnPostAsync() // uložit autora
     {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        Autor.UserId = userId;
+
         if (!ModelState.IsValid)
         {
             string textChyby = System.Net.WebUtility.UrlEncode("Příjmení musí být vyplněno!!!");
@@ -89,11 +92,6 @@ public class AutorEditModel : PageModel
 
         if (IdAutora == 0)
         {
-            // 1) Získat ID přihlášeného uživatele
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            // 2) Přiřadit ho k autorovi
-            Autor.UserId = userId;
 
             await DB.Autori.AddAsync(Autor);  
         }
